@@ -1,0 +1,249 @@
+@page "/admin/media"
+@using CollegeWebSite.Components.Admin.Layout
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@using CollegeWebSite.Domain.Enums
+@layout AdminLayout
+@inject IMediaService MediaService
+
+<PageTitle>Media Library | Ishika CMS Admin</PageTitle>
+
+<div class="mb-5 flex flex-col lg:flex-row lg:items-end justify-between gap-3 animate-in fade-in slide-in-from-top-4 duration-700">
+    <div class="space-y-1">
+        <div class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-blue-50 text-primary text-[8px] font-black uppercase tracking-widest rounded border border-primary/5">
+            Asset Governance
+        </div>
+        <h1 class="text-xl lg:text-2xl font-black text-slate-900 tracking-tight leading-none uppercase">Institutional <span class="text-slate-400">Vault</span></h1>
+        <p class="text-slate-500 font-bold text-[10px] max-w-xl uppercase tracking-tighter">Manage images, clinical documents, and institutional videos.</p>
+    </div>
+    
+    <label class="group/btn relative px-6 py-2.5 bg-slate-950 text-white font-black text-[9px] uppercase tracking-widest rounded shadow-lg hover:bg-primary transition-all overflow-hidden cursor-pointer text-center">
+        <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover/btn:animate-shimmer"></div>
+        <div class="relative flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+            Upload Asset
+        </div>
+        <InputFile OnChange="HandleFileSelected" class="hidden" />
+    </label>
+</div>
+
+@if (IsUploading)
+{
+    <div class="mb-4 p-3 bg-white border border-primary/20 rounded-lg shadow-sm animate-pulse flex items-center gap-3">
+        <div class="h-8 w-8 rounded bg-primary/10 flex items-center justify-center text-primary">
+            <div class="h-4 w-4 border-2 border-primary border-t-transparent animate-spin rounded-full"></div>
+        </div>
+        <div class="flex-1">
+            <p class="text-[9px] font-black text-slate-900 uppercase tracking-widest">Encrypting and Storing Asset...</p>
+            <div class="mt-1 h-1 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-primary animate-progress"></div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+@if (IsLoading)
+    {
+        @for(int i=0; i<12; i++)
+        {
+            <div class="aspect-square bg-slate-50 border border-slate-100 rounded animate-pulse"></div>
+        }
+    }
+    else if (MediaItems.Any())
+    {
+        @foreach (var item in MediaItems)
+        {
+            <div class="group relative aspect-square bg-white rounded border border-slate-100 shadow-sm hover:shadow transition-all overflow-hidden cursor-pointer" @onclick="() => SelectMedia(item)">
+                @if (item.Type == MediaType.Image)
+                {
+                    <OptimizedImage Media="@item" 
+                                    Class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                }
+                else
+                {
+                    <div class="w-full h-full flex flex-col items-center justify-center bg-slate-50 text-slate-300 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500">
+                        <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            @if (item.Type == MediaType.Video) { <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /> }
+                            else { <path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /> }
+                        </svg>
+                        <span class="mt-1 text-[7px] font-black uppercase tracking-widest text-center px-2 truncate w-full">@item.FileName</span>
+                    </div>
+                }
+
+                <!-- Hover Overlay -->
+                <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
+                    <button class="h-7 w-7 rounded bg-white text-slate-950 shadow-lg hover:bg-primary hover:text-white transition-all transform translate-y-1 group-hover:translate-y-0 duration-300">
+                        <svg class="w-3.5 h-3.5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    </button>
+                    <button @onclick:stopPropagation="true" @onclick="() => HandleDelete(item.Id)" class="h-7 w-7 rounded bg-white text-slate-950 shadow-lg hover:bg-red-500 hover:text-white transition-all transform translate-y-1 group-hover:translate-y-0 duration-300 delay-75">
+                        <svg class="w-3.5 h-3.5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    </button>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-span-full py-20 text-center space-y-6 bg-slate-50/50 rounded-2xl border-2 border-dashed border-slate-100">
+            <div class="h-16 w-16 bg-white rounded-full flex items-center justify-center text-slate-200 mx-auto shadow-sm">
+                <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <div class="space-y-1">
+                <h4 class="text-lg font-black text-slate-900 italic uppercase">No Assets</h4>
+                <p class="text-slate-400 font-bold uppercase tracking-widest text-[8px]">Institutional digital vault is currently empty.</p>
+            </div>
+        </div>
+    }
+</div>
+
+@if (SelectedMediaItem != null)
+{
+    <!-- Media Details Modal -->
+    <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[200] flex items-center justify-center p-4" @onclick="() => SelectedMediaItem = null">
+        <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col lg:flex-row animate-in zoom-in-95 duration-300" @onclick:stopPropagation="true">
+            <!-- Preview -->
+            <div class="bg-black flex-1 flex items-center justify-center overflow-hidden min-h-[250px] lg:min-h-0">
+                @if (SelectedMediaItem.Type == MediaType.Image)
+                {
+                    <OptimizedImage Media="@SelectedMediaItem" 
+                                    Class="max-w-full max-h-full object-contain" 
+                                    ContainerClass="w-full h-full flex items-center justify-center" />
+                }
+                else
+                {
+                    <div class="text-white flex flex-col items-center gap-2">
+                        <svg class="w-12 h-12 text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                        <p class="text-[9px] font-black uppercase tracking-widest">No Preview</p>
+                    </div>
+                }
+            </div>
+
+            <!-- Meta Controls -->
+            <div class="lg:w-[280px] p-5 space-y-4 overflow-y-auto bg-slate-50 border-l border-slate-100">
+                <div class="space-y-3">
+                    <h3 class="text-base font-black text-slate-900 tracking-tight uppercase">Metadata</h3>
+                    <div class="space-y-0.5">
+                        <p class="text-[7px] font-black text-slate-400 uppercase tracking-widest">Filename</p>
+                        <p class="text-[10px] font-bold text-slate-700 truncate">@SelectedMediaItem.FileName</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="space-y-0.5">
+                            <p class="text-[7px] font-black text-slate-400 uppercase tracking-widest">Type</p>
+                            <span class="px-1 py-0.5 bg-slate-900 text-white text-[6px] font-black uppercase rounded">@SelectedMediaItem.MimeType</span>
+                        </div>
+                        <div class="space-y-0.5">
+                            <p class="text-[7px] font-black text-slate-400 uppercase tracking-widest">Size</p>
+                            <p class="text-[9px] font-bold text-slate-700">@FormatSize(SelectedMediaItem.FileSize)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="space-y-1">
+                        <label class="text-[7px] font-black text-slate-400 uppercase tracking-widest">Alt Text</label>
+                        <input type="text" @bind="SelectedMediaItem.AltText" class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded focus:border-primary outline-none transition-all text-[11px] font-bold" />
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[7px] font-black text-slate-400 uppercase tracking-widest">Description</label>
+                        <textarea @bind="SelectedMediaItem.Description" class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded focus:border-primary outline-none transition-all text-[11px] font-medium h-20"></textarea>
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-200 space-y-1.5">
+                    <button @onclick="UpdateMedia" class="w-full py-2.5 bg-slate-950 text-white font-black text-[8px] uppercase tracking-widest rounded shadow hover:bg-primary transition-all">Sync Ledger</button>
+                    <button @onclick="() => SelectedMediaItem = null" class="w-full py-2.5 bg-white text-slate-400 font-black text-[8px] uppercase tracking-widest rounded border border-slate-200 transition-all hover:bg-slate-50 uppercase">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    @@keyframes progress {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    .animate-progress {
+        animation: progress 2s infinite linear;
+    }
+</style>
+
+@code {
+    private List<Media> MediaItems { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+    private bool IsUploading { get; set; } = false;
+    private Media? SelectedMediaItem { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMedia();
+    }
+
+    private async Task LoadMedia()
+    {
+        try 
+        {
+            IsLoading = true;
+            MediaItems = await MediaService.GetAllMediaAsync();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        IsUploading = true;
+        try 
+        {
+            var uploaded = await MediaService.UploadMediaAsync(e.File);
+            if (uploaded != null)
+            {
+                await LoadMedia();
+            }
+        }
+        finally
+        {
+            IsUploading = false;
+        }
+    }
+
+    private async Task HandleDelete(long id)
+    {
+        if (await MediaService.DeleteMediaAsync(id))
+        {
+            await LoadMedia();
+        }
+    }
+
+    private void SelectMedia(Media item)
+    {
+        SelectedMediaItem = item;
+    }
+
+    private async Task UpdateMedia()
+    {
+        if (SelectedMediaItem == null) return;
+        
+        await MediaService.UpdateMediaInfoAsync(SelectedMediaItem.Id, SelectedMediaItem.AltText, SelectedMediaItem.Description);
+        SelectedMediaItem = null;
+        await LoadMedia();
+    }
+
+    private string FormatSize(long bytes)
+    {
+        string[] suffix = { "B", "KB", "MB", "GB" };
+        int i = 0;
+        double dblSByte = bytes;
+        if (bytes > 1024)
+        {
+            for (i = 0; (bytes / 1024) > 0; i++, bytes /= 1024)
+            {
+                dblSByte = bytes / 1024.0;
+            }
+        }
+        return $"{dblSByte:0.##} {suffix[i]}";
+    }
+}

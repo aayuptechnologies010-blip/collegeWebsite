@@ -1,0 +1,96 @@
+@page "/admin/settings/theme"
+@using CollegeWebSite.Components.Admin.Layout
+@using CollegeWebSite.Services.Implementation
+@layout AdminLayout
+@inject ThemeService ThemeService
+
+<PageTitle>System Aesthetics | Ishika CMS Admin</PageTitle>
+
+<div class="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-700">
+    <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-md border border-primary/5">
+            Visual Governance
+        </div>
+        <h1 class="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-none">System <br/><span class="text-slate-400">Aesthetics.</span></h1>
+        <p class="text-slate-500 font-medium text-sm max-w-xl">Customize the visual signature of the executive command center.</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+    @foreach (var theme in ThemeService.GetThemeOptions())
+    {
+        <div @onclick="() => SelectTheme(theme.Id)" 
+             class="group relative bg-white rounded-[2.5rem] p-8 border-2 transition-all duration-500 cursor-pointer overflow-hidden @(ThemeService.CurrentTheme == theme.Id ? "border-primary shadow-premium scale-[1.02]" : "border-slate-100 hover:border-slate-200 shadow-sm")">
+            
+            <div class="flex justify-between items-start mb-10">
+                <div class="h-14 w-14 rounded-2xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 duration-500" style="background: @theme.Primary">
+                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path d="m2 11 1.22 1.22a4 4 0 0 0 5.66 0l5.9-5.9a4 4 0 0 0 0-5.66L13.56 2" />
+                        <path d="m11.38 4.89 1.73 1.73" />
+                        <path d="m22 22-5-5" />
+                        <path d="M7.5 10.5h1.5" />
+                        <path d="m8 13 5 5" />
+                    </svg>
+                </div>
+                @if (ThemeService.CurrentTheme == theme.Id)
+                {
+                    <span class="px-3 py-1.5 bg-primary text-white text-[8px] font-black uppercase tracking-widest rounded-full shadow-lg animate-in zoom-in duration-300">Active</span>
+                }
+            </div>
+
+            <div class="space-y-2 relative z-10">
+                <h3 class="text-xl font-black text-slate-900 tracking-tight">@theme.Name</h3>
+                <p class="text-xs text-slate-500 font-medium leading-relaxed">@theme.Description</p>
+            </div>
+
+            <div class="mt-8 flex gap-2">
+                <div class="h-8 w-8 rounded-full border-2 border-white shadow-sm" style="background: @theme.Primary"></div>
+                <div class="h-8 w-8 rounded-full border-2 border-white shadow-sm" style="background: @theme.Secondary"></div>
+                <div class="h-8 w-8 rounded-full border-2 border-white shadow-sm bg-slate-50"></div>
+            </div>
+
+            <!-- Decorative background elements -->
+            <div class="absolute -bottom-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" style="background: @theme.Primary"></div>
+            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </div>
+    }
+</div>
+
+@if (ShowToast)
+{
+    <div class="fixed bottom-10 right-10 bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 animate-in slide-in-from-right-10 duration-500 z-[100]">
+        <div class="h-8 w-8 rounded-lg bg-green-500 flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+        <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none mb-1">Configuration Synced</p>
+            <p class="text-sm font-bold tracking-tight">System Aesthetics Updated.</p>
+        </div>
+    </div>
+}
+
+@code {
+    private bool ShowToast { get; set; } = false;
+
+    private async Task SelectTheme(string themeId)
+    {
+        await ThemeService.SetThemeAsync(themeId);
+        ShowToast = true;
+        StateHasChanged();
+        await Task.Delay(3000);
+        ShowToast = false;
+        StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        ThemeService.OnThemeChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        ThemeService.OnThemeChanged -= StateHasChanged;
+    }
+}

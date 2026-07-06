@@ -1,0 +1,130 @@
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@using CollegeWebSite.Domain.Enums
+@inject IMediaService MediaService
+
+<div class="space-y-4">
+    <div class="flex items-center justify-between">
+        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">@Label</label>
+        @if (SelectedMedia != null)
+        {
+            <button @onclick="ClearSelection" class="text-[9px] font-black text-red-500 uppercase tracking-widest hover:underline transition-all">Detach Asset</button>
+        }
+    </div>
+
+    @if (SelectedMedia == null)
+    {
+        <button type="button" @onclick="OpenPicker" class="w-full aspect-video rounded-[2rem] border-2 border-dashed border-slate-100 bg-slate-50/50 flex flex-col items-center justify-center gap-4 group hover:bg-white hover:border-primary/20 hover:shadow-premium transition-all">
+            <div class="h-12 w-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-slate-300 group-hover:text-primary transition-colors">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-slate-900 transition-colors">Select from Vault</span>
+        </button>
+    }
+    else
+    {
+        <div class="relative group aspect-video rounded-[2rem] overflow-hidden border-2 border-slate-100 shadow-premium">
+            @if (SelectedMedia.Type == MediaType.Image)
+            {
+                <img src="@SelectedMedia.Url" class="w-full h-full object-cover" />
+            }
+            else
+            {
+                <div class="w-full h-full bg-slate-950 flex flex-col items-center justify-center text-white p-6 text-center">
+                    <svg class="w-12 h-12 text-white/20 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                    <p class="text-[10px] font-black uppercase tracking-widest truncate w-full">@SelectedMedia.FileName</p>
+                </div>
+            }
+            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <button type="button" @onclick="OpenPicker" class="px-6 py-2 bg-white text-slate-900 font-black text-[10px] uppercase tracking-widest rounded-full shadow-2xl hover:bg-primary hover:text-white transition-all">Swap Asset</button>
+            </div>
+        </div>
+    }
+</div>
+
+@if (ShowPicker)
+{
+    <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[300] flex items-center justify-center p-6">
+        <div class="bg-white rounded-[4rem] w-full max-w-6xl h-[80vh] overflow-hidden shadow-2xl flex flex-col animate-in zoom-in-95 duration-300">
+            <!-- Header -->
+            <div class="p-10 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+                <div class="space-y-1">
+                    <h3 class="text-3xl font-black text-slate-900 tracking-tight">Institutional Vault</h3>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Select an asset for @Label.ToLower()</p>
+                </div>
+                <button @onclick="ClosePicker" class="h-12 w-12 rounded-2xl bg-white border border-slate-200 text-slate-400 hover:text-slate-900 transition-all shadow-sm flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <!-- Library Grid -->
+            <div class="flex-1 overflow-y-auto p-10">
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                    @if (IsLoading)
+                    {
+                        @for(int i=0; i<12; i++)
+                        {
+                            <div class="aspect-square bg-slate-50 rounded-3xl animate-pulse"></div>
+                        }
+                    }
+                    else
+                    {
+                        @foreach (var media in MediaItems)
+                        {
+                            <div class="group relative aspect-square bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-premium hover:-translate-y-1 transition-all overflow-hidden cursor-pointer @(SelectedMedia?.Id == media.Id ? "ring-4 ring-primary ring-offset-4" : "")" @onclick="() => SelectItem(media)">
+                                @if (media.Type == MediaType.Image)
+                                {
+                                    <img src="@media.Url" class="w-full h-full object-cover" />
+                                }
+                                else
+                                {
+                                    <div class="w-full h-full flex flex-col items-center justify-center bg-slate-50 text-slate-300">
+                                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                                        <span class="mt-2 text-[6px] font-black uppercase text-center px-2 truncate w-full">@media.FileName</span>
+                                    </div>
+                                }
+                                <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-8 border-t border-slate-50 bg-slate-50/50 flex justify-end">
+                <button @onclick="ClosePicker" class="px-10 py-4 bg-slate-900 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl hover:bg-primary transition-all">Confirm Selection</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Label { get; set; } = "Media Asset";
+    [Parameter] public Media? SelectedMedia { get; set; }
+    [Parameter] public EventCallback<Media?> SelectedMediaChanged { get; set; }
+
+    private List<Media> MediaItems { get; set; } = new();
+    private bool ShowPicker { get; set; } = false;
+    private bool IsLoading { get; set; } = false;
+
+    private async Task OpenPicker()
+    {
+        ShowPicker = true;
+        IsLoading = true;
+        MediaItems = await MediaService.GetAllMediaAsync();
+        IsLoading = false;
+    }
+
+    private void ClosePicker() => ShowPicker = false;
+
+    private async Task SelectItem(Media media)
+    {
+        await SelectedMediaChanged.InvokeAsync(media);
+        ClosePicker();
+    }
+
+    private async Task ClearSelection()
+    {
+        await SelectedMediaChanged.InvokeAsync(null);
+    }
+}

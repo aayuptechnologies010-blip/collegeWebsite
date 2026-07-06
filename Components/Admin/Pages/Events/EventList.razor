@@ -1,0 +1,134 @@
+@page "/admin/events"
+@using CollegeWebSite.Components.Admin.Layout
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@layout AdminLayout
+@inject IEventService EventService
+@inject NavigationManager Navigation
+
+<PageTitle>Campus Events | Ishika CMS Admin</PageTitle>
+
+<div class="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+    <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-md border border-primary/5">
+            Institutional Calendar
+        </div>
+        <h1 class="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-none">Activity <br/><span class="text-slate-400">Broadcaster.</span></h1>
+        <p class="text-slate-500 font-medium text-sm max-w-xl">Manage schedules for campus celebrations and academic seminars.</p>
+    </div>
+    
+    <button @onclick='() => Navigation.NavigateTo("/admin/events/edit")' class="group/btn relative px-8 py-3 bg-slate-950 text-white font-black text-[10px] uppercase tracking-[0.2em] rounded-xl shadow-2xl hover:bg-primary transition-all overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover/btn:animate-shimmer"></div>
+        <div class="relative flex items-center gap-2">
+            <svg class="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
+            Broadcast Activity
+        </div>
+    </button>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    @if (IsLoading)
+    {
+        @for(int i=0; i<4; i++)
+        {
+            <div class="h-64 bg-white rounded-2xl border border-slate-100 animate-pulse"></div>
+        }
+    }
+    else if (Events.Any())
+    {
+        @foreach (var evt in Events)
+        {
+            <div class="group relative bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col h-full">
+                <!-- Banner Preview -->
+                <div class="aspect-[16/9] relative overflow-hidden bg-slate-100">
+                    <OptimizedImage Media="@evt.Banner" 
+                                    Src="@(evt.Banner == null ? "images/event-placeholder.jpg" : null)"
+                                    AltText="@evt.Title"
+                                    Class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
+                    <div class="absolute top-4 left-4 flex items-center gap-2">
+                        @if (evt.IsPublished)
+                        {
+                            <span class="px-2 py-0.5 bg-green-500 text-white text-[7px] font-black uppercase tracking-widest rounded shadow-lg">Public</span>
+                        }
+                        else
+                        {
+                             <span class="px-2 py-0.5 bg-slate-900 text-white text-[7px] font-black uppercase tracking-widest rounded shadow-lg border border-white/20">Draft</span>
+                        }
+                    </div>
+                </div>
+
+                <!-- Info -->
+                <div class="p-6 flex flex-1 flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-1.5 text-primary font-black text-[8px] uppercase tracking-widest">
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                            <span>@evt.EventDate.ToString("MMM dd, yyyy")</span>
+                        </div>
+                        <h3 class="text-lg font-black text-slate-900 tracking-tight leading-none group-hover:text-primary transition-colors line-clamp-1">@evt.Title</h3>
+                        <p class="text-slate-500 font-medium text-xs line-clamp-2">@evt.Description</p>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
+                         <div class="flex items-center gap-1.5 text-slate-400">
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <span class="text-[8px] font-black uppercase tracking-widest truncate max-w-[100px]">@evt.Venue</span>
+                         </div>
+                         <div class="flex items-center gap-2">
+                             <button @onclick='() => Navigation.NavigateTo($"/admin/events/edit/{evt.Id}")' class="h-8 w-8 rounded-lg bg-white text-slate-400 hover:text-blue-500 hover:bg-white transition-all border border-slate-100 hover:shadow-md flex items-center justify-center">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                             </button>
+                             <button @onclick="() => HandleDelete(evt.Id)" class="h-8 w-8 rounded-lg bg-white text-slate-400 hover:text-red-500 hover:bg-white transition-all border border-slate-100 hover:shadow-md flex items-center justify-center">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                             </button>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        }
+        }
+    }
+    else
+    {
+        <div class="col-span-full py-32 text-center space-y-8 bg-slate-50/50 rounded-[4rem] border-4 border-dashed border-slate-100">
+            <div class="h-24 w-24 bg-white rounded-full flex items-center justify-center text-slate-200 mx-auto shadow-sm">
+                <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            </div>
+            <div class="space-y-2">
+                <h4 class="text-xl font-black text-slate-900 italic">No Activity Scheduled.</h4>
+                <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">The institutional calendar is currently blank.</p>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Event> Events { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEvents();
+    }
+
+    private async Task LoadEvents()
+    {
+        try 
+        {
+            IsLoading = true;
+            Events = await EventService.GetAllEventsAsync(onlyPublished: false);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task HandleDelete(long id)
+    {
+        if (await EventService.DeleteEventAsync(id))
+        {
+            await LoadEvents();
+        }
+    }
+}

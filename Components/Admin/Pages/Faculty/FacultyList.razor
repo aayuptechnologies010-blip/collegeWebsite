@@ -1,0 +1,106 @@
+@page "/admin/faculty"
+@using CollegeWebSite.Components.Admin.Layout
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@layout AdminLayout
+@inject IFacultyService FacultyService
+@inject NavigationManager Navigation
+
+<PageTitle>Faculty Management | Ishika CMS Admin</PageTitle>
+
+<div class="mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in slide-in-from-top-4 duration-700">
+    <div class="space-y-0.5">
+        <h1 class="text-xl font-black text-slate-900 tracking-tight uppercase">Academic Roster</h1>
+        <p class="text-slate-500 font-bold text-[10px] max-w-xl uppercase tracking-tighter">Manage clinical staff, senior tutors, and principal profiles.</p>
+    </div>
+    
+    <button @onclick='() => Navigation.NavigateTo("/admin/faculty/edit")' class="px-6 py-2 bg-slate-950 text-white font-black text-[9px] uppercase tracking-widest rounded shadow-lg hover:bg-primary transition-all flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
+        Register Faculty
+    </button>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+@if (IsLoading)
+    {
+        @for(int i=0; i<5; i++)
+        {
+            <div class="h-56 bg-white rounded border border-slate-100 animate-pulse"></div>
+        }
+    }
+    else if (FacultyMembers.Any())
+    {
+        @foreach (var member in FacultyMembers)
+        {
+            <div class="bg-white rounded border border-slate-200 shadow-sm overflow-hidden group hover:shadow transition-all">
+                <div class="aspect-[4/3] relative overflow-hidden bg-slate-100">
+                    <OptimizedImage Media="@member.Photo" 
+                                    Src="@(member.Photo == null ? "images/placeholder-avatar.jpg" : null)"
+                                    AltText="@member.Name"
+                                    Class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" />
+                    <div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-slate-950 to-transparent">
+                         <span class="px-1 py-0.5 rounded-sm bg-white/20 backdrop-blur-md text-[6px] font-black text-white uppercase tracking-widest border border-white/10">#@member.DisplayOrder</span>
+                    </div>
+                </div>
+                
+                <div class="p-3 space-y-2">
+                    <div class="space-y-0.5 min-h-[32px]">
+                        <h4 class="text-[11px] font-black text-slate-900 truncate leading-none uppercase">@member.Name</h4>
+                        <p class="text-[8px] font-bold text-primary uppercase tracking-widest leading-none">@member.Designation</p>
+                    </div>
+                    
+                    <div class="pt-2 border-t border-slate-50 flex items-center justify-between gap-1.5">
+                         <div class="flex items-center gap-1">
+                            <button @onclick='() => Navigation.NavigateTo($"/admin/faculty/edit/{member.Id}")' class="p-1.5 rounded bg-slate-50 text-slate-400 hover:text-blue-500 hover:bg-white transition-all border border-slate-100 shadow-sm">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                            </button>
+                            <button @onclick="() => HandleDelete(member.Id)" class="p-1.5 rounded bg-slate-50 text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all border border-slate-100">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                            </button>
+                         </div>
+                         <a href="mailto:@member.Email" class="text-[7px] font-black text-slate-400 hover:text-slate-600 truncate max-w-[60px] uppercase">EMAIL</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-span-full py-20 text-center">
+             <div class="h-16 w-16 bg-slate-50 rounded-3xl flex items-center justify-center text-slate-300 mx-auto mb-4">
+                 <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+             </div>
+             <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">No faculty members registered.</p>
+        </div>
+    }
+</div>
+
+@code {
+    private List<CollegeWebSite.Domain.Entities.Faculty> FacultyMembers { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFaculty();
+    }
+
+    private async Task LoadFaculty()
+    {
+        try 
+        {
+            FacultyMembers = await FacultyService.GetAllFacultyAsync();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task HandleDelete(long id)
+    {
+        if (await FacultyService.DeleteFacultyAsync(id))
+        {
+            await LoadFaculty();
+        }
+    }
+}

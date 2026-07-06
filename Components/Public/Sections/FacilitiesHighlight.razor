@@ -1,0 +1,131 @@
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@inject IGalleryService GalleryService
+
+<section class="py-20 lg:py-32 bg-white relative overflow-hidden group/fac">
+    <!-- Sophisticated Background Glows -->
+    <div class="absolute top-1/2 left-3/4 w-[40rem] h-[40rem] bg-primary/5 rounded-full blur-[140px] -z-0 opacity-0 group-hover/fac:opacity-100 transition-opacity duration-1000"></div>
+    <div class="absolute bottom-1/2 right-3/4 w-[40rem] h-[40rem] bg-secondary/5 rounded-full blur-[140px] -z-0 opacity-0 group-hover/fac:opacity-100 transition-opacity duration-1000"></div>
+
+    <div class="container-custom relative z-10 px-6 lg:px-0">
+        <div class="flex flex-col lg:grid lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+            
+            <!-- Information: Sticky on Desktop -->
+            <div class="w-full lg:col-span-5 space-y-12 lg:sticky lg:top-32 h-fit">
+                <div class="space-y-6">
+                    <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-slate-950/5 text-slate-800 text-[11.5px] font-black uppercase tracking-[0.25em] border border-slate-950/10 shadow-sm">
+                        <span class="relative flex h-2.5 w-2.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-25"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary shadow-[0_0_8px_rgba(1,66,122,0.5)]"></span>
+                        </span>
+                        Institutional Assets
+                    </div>
+                    <h2 class="text-5xl lg:text-7xl font-black text-slate-900 leading-[0.95] uppercase tracking-tighter">
+                        Infrastructure <br />
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-700 to-secondary italic">Architected for Care.</span>
+                    </h2>
+                    <p class="text-lg lg:text-[20px] text-slate-500 font-bold leading-relaxed max-w-lg uppercase tracking-tight">
+                        We blend clinical tradition with <span class="text-slate-900 font-black">advanced simulation</span> to create an elite learning ecosystem for future medical leaders.
+                    </p>
+                </div>
+
+                <!-- Premium Feature Grid -->
+                <div class="grid grid-cols-2 gap-5 lg:gap-8 text-left">
+                    <div class="group/f p-6 lg:p-8 bg-slate-50 rounded-[2.5rem] border border-transparent hover:border-primary/20 hover:bg-white hover:shadow-premium transition-all duration-500">
+                        <div class="h-14 w-14 rounded-2xl bg-primary text-white flex items-center justify-center mb-6 group-hover/f:scale-110 transition-all shadow-xl shadow-primary/20">
+                             <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.638.319a2 2 0 01-1.789 0l-.638-.319a6 6 0 00-3.86-.517l-2.387.477a2 2 0 00-1.022.547l-.34.34a2 2 0 000 2.828l1.246 1.246a2 2 0 002.828 0L12 18l4.428 4.428a2 2 0 002.828 0l1.246-1.246a2 2 0 000-2.828l-.34-.34z" /></svg>
+                        </div>
+                        <h4 class="text-[15px] font-black text-slate-900 mb-1.5 uppercase tracking-wide">Elite Labs</h4>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">Global Simulation</p>
+                    </div>
+
+                    <div class="group/f p-6 lg:p-8 bg-slate-50 rounded-[2.5rem] border border-transparent hover:border-secondary/20 hover:bg-white hover:shadow-premium transition-all duration-500">
+                        <div class="h-14 w-14 rounded-2xl bg-secondary text-white flex items-center justify-center mb-6 group-hover/f:scale-110 transition-all shadow-xl shadow-secondary/20">
+                             <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                        </div>
+                        <h4 class="text-[15px] font-black text-slate-900 mb-1.5 uppercase tracking-wide">Digital Hub</h4>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">5k+ Digital Volumes</p>
+                    </div>
+
+                    <div class="group/f p-6 lg:p-8 bg-slate-50 rounded-[2.5rem] border border-transparent hover:border-accent/20 hover:bg-white hover:shadow-premium transition-all duration-500">
+                        <div class="h-14 w-14 rounded-2xl bg-accent text-white flex items-center justify-center mb-6 group-hover/f:scale-110 transition-all shadow-xl shadow-accent/20">
+                             <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                        </div>
+                        <h4 class="text-[15px] font-black text-slate-900 mb-1.5 uppercase tracking-wide">Residency</h4>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">24/7 Secure Campus</p>
+                    </div>
+
+                    <div class="group/f p-6 lg:p-8 bg-slate-50 rounded-[2.5rem] border border-transparent hover:border-primary/20 hover:bg-white hover:shadow-premium transition-all duration-500">
+                        <div class="h-14 w-14 rounded-2xl bg-primary text-white flex items-center justify-center mb-6 group-hover/f:scale-110 transition-all shadow-xl shadow-primary/20">
+                             <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                        </div>
+                        <h4 class="text-[15px] font-black text-slate-900 mb-1.5 uppercase tracking-wide">Clinicals</h4>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">Premium Partnerships</p>
+                    </div>
+                </div>
+
+                <a href="/gallery" class="inline-flex items-center gap-6 px-12 py-6 bg-slate-900 text-white font-black rounded-3xl shadow-premium hover:scale-105 transition-all text-[13px] uppercase tracking-widest group/btn">
+                    <span>Explore Campus Gallery</span>
+                    <svg class="w-5 h-5 group-hover/btn:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
+            </div>
+
+            <!-- Visualization: Large Staggered Gallery Grid -->
+            <div class="w-full lg:col-span-7">
+                <div class="grid grid-cols-2 gap-6 lg:gap-10">
+                    @if (FeaturedImages != null && FeaturedImages.Any())
+                    {
+                        var index = 0;
+                        @foreach (var img in FeaturedImages)
+                        {
+                            <div class="group relative rounded-[2rem] lg:rounded-[3rem] overflow-hidden shadow-premium bg-slate-50 cursor-pointer animate-parallax @(index % 3 == 0 ? "row-span-2 aspect-[4/6]" : "aspect-square")" style="animation-delay: @(index * 0.1)s">
+                                <CollegeWebSite.Components.Shared.OptimizedImage 
+                                    Media="@img.Media" 
+                                    AltText="@img.Title"
+                                    Class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 group-hover:rotate-1" />
+                                
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8 lg:p-12">
+                                    <span class="text-[10px] font-black text-primary-light uppercase tracking-widest mb-2">@img.Category?.Name</span>
+                                    <h5 class="text-white font-black text-xl lg:text-2xl leading-none uppercase tracking-tight">@img.Title</h5>
+                                </div>
+                            </div>
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <!-- Loading Placeholders -->
+                        @for (int i = 0; i < 4; i++)
+                        {
+                            <div class="bg-slate-50 rounded-[3rem] aspect-[4/5] animate-pulse"></div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    private List<GalleryImage>? FeaturedImages { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try 
+        {
+            var categories = await GalleryService.GetCategoriesWithImagesAsync();
+            // Take top images for showcase
+            FeaturedImages = categories
+                .SelectMany(c => c.Images)
+                .OrderByDescending(i => i.IsActive)
+                .ThenBy(i => i.DisplayOrder)
+                .Take(6)
+                .ToList();
+        }
+        catch (Exception)
+        {
+            // Fallback would be handled by empty check in markup
+        }
+    }
+}
+

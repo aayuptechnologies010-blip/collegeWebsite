@@ -1,0 +1,55 @@
+@using CollegeWebSite.Domain.Entities
+@inject NavigationManager NavigationManager
+
+<div class="relative overflow-hidden @ContainerClass @(IsLoaded ? "" : "bg-slate-100 animate-pulse")" 
+     style="@ContainerStyle">
+    
+    @if (Media != null)
+    {
+        <img src="@Media.Url"
+             alt="@(AltText ?? Media.AltText ?? "Ishika Nursing & Paramedical Studies")"
+             class="@Class transition-opacity duration-500 @(IsLoaded ? "opacity-100" : "opacity-0")"
+             loading="@(IsPriority ? "eager" : "lazy")"
+             decoding="async"
+             width="@Media.Width"
+             height="@Media.Height"
+             @onload="HandleLoad"
+             id="@Id" />
+    }
+    else if (!string.IsNullOrEmpty(Src))
+    {
+        <img src="@Src"
+             alt="@(AltText ?? "Ishika Nursing & Paramedical Studies")"
+             class="@Class transition-opacity duration-500 @(IsLoaded ? "opacity-100" : "opacity-0")"
+             loading="@(IsPriority ? "eager" : "lazy")"
+             decoding="async"
+             @onload="HandleLoad"
+             id="@Id" />
+    }
+
+    @if (!IsLoaded)
+    {
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public Media? Media { get; set; }
+    [Parameter] public string? Src { get; set; }
+    [Parameter] public string? AltText { get; set; }
+    [Parameter] public string? Class { get; set; } = "w-full h-full object-cover";
+    [Parameter] public string? ContainerClass { get; set; } = "rounded-lg";
+    [Parameter] public string? ContainerStyle { get; set; }
+    [Parameter] public bool IsPriority { get; set; } = false;
+    [Parameter] public string? Id { get; set; } = $"img-{Guid.NewGuid():N}";
+
+    private bool IsLoaded { get; set; } = false;
+
+    private void HandleLoad()
+    {
+        IsLoaded = true;
+        StateHasChanged();
+    }
+}

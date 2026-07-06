@@ -1,0 +1,194 @@
+@page "/admin/pages/create"
+@page "/admin/pages/edit/{Id:long}"
+@using CollegeWebSite.Domain.Entities
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Components.Admin.Layout
+@inject IPageService PageService
+@inject NavigationManager NavManager
+@layout AdminLayout
+
+<PageTitle>@(IsEditMode ? "Edit Page" : "Create Page") | Ishika CMS Admin</PageTitle>
+
+<div class="mb-6 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+        <a href="/admin/pages" class="rounded-full bg-white p-2 text-slate-500 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </a>
+        <h1 class="text-2xl font-bold text-slate-900">@(IsEditMode ? "Edit Page" : "Create New Page")</h1>
+    </div>
+    
+    <div class="flex items-center gap-3">
+        <a href="/admin/pages" class="text-sm font-medium text-slate-500 hover:text-slate-900">Cancel</a>
+        <button type="submit" form="pageForm" class="inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            @(IsEditMode ? "Save Changes" : "Create Page")
+        </button>
+    </div>
+</div>
+
+<div class="grid gap-8 lg:grid-cols-3">
+    <!-- Main Form -->
+    <div class="lg:col-span-2 space-y-6">
+        <EditForm id="pageForm" Model="@PageModel" OnValidSubmit="SavePage" class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-6">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-red-600 font-medium text-sm" />
+            
+            <!-- Title -->
+            <div class="space-y-1">
+                <label for="title" class="block text-sm font-medium text-slate-700">Page Title</label>
+                <InputText id="title" @bind-Value="PageModel.Title" class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="e.g. About Us" />
+                <ValidationMessage For="@(() => PageModel.Title)" class="text-sm text-red-600" />
+            </div>
+            
+            <!-- Slug -->
+            <div class="space-y-1">
+                <label for="slug" class="block text-sm font-medium text-slate-700">URL Slug</label>
+                <div class="flex rounded-md shadow-sm">
+                    <span class="inline-flex items-center rounded-l-md border border-r-0 border-slate-300 bg-slate-50 px-3 text-sm text-slate-500">/p/</span>
+                    <InputText id="slug" @bind-Value="PageModel.Slug" class="block w-full flex-1 rounded-none rounded-r-md border-slate-300 focus:border-primary focus:ring-primary sm:text-sm" placeholder="about-us" />
+                </div>
+                <ValidationMessage For="@(() => PageModel.Slug)" class="text-sm text-red-600" />
+            </div>
+
+            <!-- Content Editor (Simplified for now) -->
+            <div class="space-y-1">
+                <label for="content" class="block text-sm font-medium text-slate-700">Content</label>
+                <div class="relative rounded-lg border border-slate-300 shadow-sm">
+                    <!-- Basic formatting toolbar placeholder -->
+                    <div class="flex items-center gap-1 border-b border-slate-200 bg-slate-50 px-2 py-2">
+                        <button type="button" class="p-1 text-slate-500 hover:text-slate-900"><strong class="font-bold">B</strong></button>
+                        <button type="button" class="p-1 text-slate-500 hover:text-slate-900"><em class="italic">I</em></button>
+                        <div class="mx-1 h-4 w-px bg-slate-300"></div>
+                        <button type="button" class="p-1 text-slate-500 hover:text-slate-900">H1</button>
+                        <button type="button" class="p-1 text-slate-500 hover:text-slate-900">H2</button>
+                    </div>
+                    
+                    <InputTextArea id="content" @bind-Value="PageModel.ContentData" rows="15" class="block w-full border-0 p-4 text-slate-900 placeholder-slate-400 focus:ring-0 sm:text-sm" placeholder="Start writing your content here..." />
+                </div>
+                <ValidationMessage For="@(() => PageModel.ContentData)" class="text-sm text-red-600" />
+            </div>
+        </EditForm>
+    </div>
+
+    <!-- Sidebar Settings -->
+    <div class="space-y-6">
+        <!-- Publish Status -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-6">
+            <h3 class="text-base font-semibold text-slate-900 mb-4">Publishing</h3>
+            
+            <div class="flex items-center justify-between py-2">
+                <label for="published" class="text-sm font-medium text-slate-700">Published</label>
+                <div class="relative inline-block h-6 w-11 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 @(PageModel.IsPublished ? "bg-green-500" : "bg-slate-200")"
+                     @onclick="() => PageModel.IsPublished = !PageModel.IsPublished">
+                    <span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out @(PageModel.IsPublished ? "translate-x-5" : "translate-x-0")"></span>
+                </div>
+            </div>
+             
+             @if (PageModel.CreatedOn != default)
+             {
+                <div class="mt-4 border-t border-slate-100 pt-4 space-y-2 text-xs text-slate-500">
+                    <div class="flex justify-between">
+                        <span>Created:</span>
+                        <span>@PageModel.CreatedOn.ToString("MMM dd, yyyy HH:mm")</span>
+                    </div>
+                    @if (PageModel.LastModifiedOn.HasValue)
+                    {
+                        <div class="flex justify-between">
+                            <span>Modified:</span>
+                            <span>@PageModel.LastModifiedOn.Value.ToString("MMM dd, yyyy HH:mm")</span>
+                        </div>
+                    }
+                </div>
+             }
+        </div>
+
+        <!-- SEO Settings -->
+        <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-6">
+            <h3 class="text-base font-semibold text-slate-900 mb-4">SEO Settings</h3>
+            
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider">Meta Title</label>
+                    <input type="text" @bind="@SeoTitle" class="block w-full rounded-md border-slate-300 py-1.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Page Title | Brand" />
+                </div>
+                
+                <div class="space-y-1">
+                     <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider">Meta Description</label>
+                    <textarea @bind="@SeoDescription" rows="3" class="block w-full rounded-md border-slate-300 py-1.5 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Brief summary of the page..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public long? Id { get; set; }
+
+    private PageContent PageModel { get; set; } = new() 
+    { 
+        Title = string.Empty, 
+        Slug = string.Empty,
+        ContentData = string.Empty,
+        CreatedOn = DateTime.UtcNow, 
+        IsPublished = true 
+    };
+
+    private bool IsEditMode => Id.HasValue;
+    
+    private string SeoTitle { get; set; } = string.Empty;
+    private string SeoDescription { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IsEditMode)
+        {
+            var pages = await PageService.GetAllPagesAsync(); 
+            var found = pages.FirstOrDefault(p => p.Id == Id);
+            
+            if (found != null)
+            {
+                PageModel = found;
+                SeoTitle = PageModel.Seo?.MetaTitle ?? string.Empty;
+                SeoDescription = PageModel.Seo?.MetaDescription ?? string.Empty;
+            }
+            else
+            {
+                NavManager.NavigateTo("/admin/pages");
+            }
+        }
+    }
+
+    private async Task SavePage()
+    {
+        // Update SEO
+        if (PageModel.Seo == null) PageModel.Seo = new PageSeo();
+        PageModel.Seo.MetaTitle = !string.IsNullOrEmpty(SeoTitle) ? SeoTitle : null;
+        PageModel.Seo.MetaDescription = !string.IsNullOrEmpty(SeoDescription) ? SeoDescription : null;
+
+        // Auto-generate slug if empty
+        if (string.IsNullOrWhiteSpace(PageModel.Slug))
+        {
+            PageModel.Slug = PageModel.Title.ToLowerInvariant().Replace(" ", "-").Trim();
+        }
+
+        try
+        {
+            if (IsEditMode)
+            {
+                PageModel.LastModifiedOn = DateTime.UtcNow;
+                await PageService.UpdatePageAsync(PageModel);
+            }
+            else
+            {
+                PageModel.CreatedOn = DateTime.UtcNow;
+                await PageService.CreatePageAsync(PageModel);
+            }
+
+            NavManager.NavigateTo("/admin/pages");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving page: {ex.Message}");
+        }
+    }
+}

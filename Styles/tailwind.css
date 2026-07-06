@@ -1,0 +1,162 @@
+@import "tailwindcss";
+@source "../**/*.{razor,html,cshtml}";
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+@theme {
+    --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+
+    /* Theme Identity Variables */
+    --color-primary: var(--primary-color, #01427a);
+    --color-secondary: var(--secondary-color, #e31e24);
+    --color-accent: var(--accent-color, #2e7d32);
+    --color-primary-light: var(--primary-light-color, #f0f7ff);
+    --color-secondary-light: var(--secondary-light-color, #fff1f2);
+
+    /* Spacious Layout Variables */
+    --app-radius-full: 2.5rem;
+    --app-radius-sm: 1rem;
+    --app-gap-base: 3.5rem;
+    --app-gap-tight: 1.75rem;
+    --app-padding-base: 4rem;
+    --app-container-max: 90%;
+    /* Standard 1216px width */
+    --app-admin-sidebar: 18rem;
+
+    /* Semantic Typography Scale (Enhanced) */
+    --text-display: 4.5rem;
+    --text-heading: 2.5rem;
+    --text-subheading: 1.375rem;
+    --text-body: 1.125rem;
+    /* 18px */
+    --text-caption: 1rem;
+    /* 16px */
+
+    /* Advanced Shadow System (Refined) */
+    --shadow-premium: 0 15px 40px -10px rgba(1, 66, 122, 0.12);
+    --shadow-glass: 0 8px 32px 0 rgba(1, 66, 122, 0.08);
+
+    /* Advanced Animation System (Same) */
+    --animate-float: float 6s ease-in-out infinite;
+    --animate-shine: shine 3s linear infinite;
+    --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    --animate-blob: blob 7s infinite;
+    --animate-parallax: parallax 1s ease-out forwards;
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    @keyframes shine {
+        0% {
+            background-position: -200% 0;
+        }
+
+        100% {
+            background-position: 200% 0;
+        }
+    }
+
+    @keyframes fade-in-up {
+        0% {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes blob {
+        0% {
+            transform: translate(0px, 0px) scale(1);
+        }
+
+        33% {
+            transform: translate(40px, -60px) scale(1.1);
+        }
+
+        66% {
+            transform: translate(-30px, 30px) scale(0.9);
+        }
+
+        100% {
+            transform: translate(0px, 0px) scale(1);
+        }
+    }
+
+    @keyframes parallax {
+        from {
+            opacity: 0;
+            transform: scale(0.95) translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+}
+
+/* Custom Base Styles */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+        /* Standard sizing */
+    }
+
+    body {
+        @apply bg-slate-50 text-slate-900 antialiased;
+        font-size: var(--text-body);
+        line-height: 1.6;
+    }
+
+    /* Remove focus outlines and highlighted selection */
+    *:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    ::-moz-selection {
+        background: var(--color-primary);
+        color: white;
+    }
+
+    ::selection {
+        background: var(--color-primary);
+        color: white;
+    }
+}
+
+/* Custom Component Styles */
+@layer components {
+    .section-standard {
+        @apply py-12 lg:py-24 px-4 lg:px-0;
+    }
+
+    .btn-primary {
+        @apply px-5 py-2.5 bg-[var(--color-primary)] text-white font-bold rounded-[var(--app-radius-sm)] shadow-md hover:opacity-95 transition-all duration-300 focus:outline-none uppercase tracking-wider;
+        font-size: var(--text-caption);
+    }
+
+    .container-custom {
+        max-width: var(--app-container-max);
+        @apply mx-auto px-6 lg:px-8;
+    }
+
+    .card-premium {
+        @apply bg-white border border-slate-100 shadow-glass rounded-[var(--app-radius-sm)] p-6 lg:p-8 transition-all duration-500 hover:shadow-premium;
+    }
+}

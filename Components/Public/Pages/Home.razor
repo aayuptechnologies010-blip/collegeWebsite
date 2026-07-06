@@ -1,0 +1,56 @@
+@page "/"
+@using Microsoft.Extensions.Options
+@using CollegeWebSite.Domain.Settings
+@using CollegeWebSite.Components.Public.Layout
+@using CollegeWebSite.Components.Public.Sections
+@using CollegeWebSite.Components.Shared
+@using CollegeWebSite.Services.Interfaces
+@inject IOptions<InstitutionSettings> InstitutionOptions
+@inject ISeoService SeoService
+@layout MainLayout
+
+<SeoHead Title="Ishika Nursing & Paramedical College | Kendujhar, Odisha"
+         Description="Ishika Nursing & Paramedical College in Kendujhar (Keonjhar) — GNM, ANM, B.Sc Nursing and paramedical programs with modern labs and career support."
+         Keywords="Ishika Nursing College, Nursing College Kendujhar, Keonjhar GNM, Odisha nursing admission, paramedical college Odisha"
+         CanonicalUrl="/" />
+
+<StructuredData JsonLd="@GetWebSiteSchema()" />
+<StructuredData JsonLd="@GetOrganizationSchema()" />
+<StructuredData JsonLd="@GetEducationalInstitutionSchema()" />
+<StructuredData JsonLd="@GetCourseSchema()" />
+
+<HeroSection />
+
+<LatestNotices />
+
+<StatsSection />
+
+<PrincipalMessage />
+
+<CoursesHighlight />
+
+<FacilitiesHighlight />
+
+<FeaturesSection />
+
+@code {
+    private string GetWebSiteSchema() => SeoService.GenerateWebSiteSchema();
+
+    private string GetOrganizationSchema()
+    {
+        return SeoService.GenerateOrganizationSchema();
+    }
+
+    private string GetEducationalInstitutionSchema()
+    {
+        return SeoService.GenerateEducationalInstitutionSchema();
+    }
+
+    private string GetCourseSchema()
+    {
+        return SeoService.GenerateCourseSchema(
+            "GNM (General Nursing and Midwifery)",
+            $"3-year GNM program recognized by ONMRC and affiliated with ONMEB. 60 seats available for academic session {InstitutionOptions.Value.AcademicYear}."
+        );
+    }
+}

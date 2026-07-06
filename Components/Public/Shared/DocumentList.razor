@@ -1,0 +1,110 @@
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@using CollegeWebSite.Domain.Enums
+@inject IDocumentService DocumentService
+
+@if (Documents == null)
+{
+    <div class="flex items-center justify-center py-12">
+        <div class="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    </div>
+}
+else if (Documents.Any())
+{
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach (var document in Documents)
+        {
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all group">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h4 class="text-sm font-black text-slate-900 truncate">@document.Title</h4>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                    @GetDocumentTypeLabel(document.Type)
+                                </span>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(document.Description))
+                        {
+                            <p class="text-xs text-slate-500 line-clamp-2">@document.Description</p>
+                        }
+                    </div>
+                </div>
+                
+                @if (document.ValidTo.HasValue)
+                {
+                    <div class="mb-4 text-[10px] text-slate-400 font-medium">
+                        Valid until: @document.ValidTo.Value.ToString("MMM dd, yyyy")
+                    </div>
+                }
+                
+                <a href="/api/documents/@document.Id/download" 
+                   target="_blank"
+                   class="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white text-xs font-black rounded-xl hover:bg-primary transition-all group-hover:scale-105">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download
+                </a>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center py-12">
+        <p class="text-slate-400 font-medium">No documents available at this time.</p>
+    </div>
+}
+
+@code {
+    [Parameter] public DocumentType? FilterByType { get; set; }
+    [Parameter] public int? MaxItems { get; set; }
+
+    private List<Document>? Documents { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDocuments();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadDocuments();
+    }
+
+    private async Task LoadDocuments()
+    {
+        if (FilterByType.HasValue)
+        {
+            Documents = await DocumentService.GetDocumentsByTypeAsync(FilterByType.Value);
+        }
+        else
+        {
+            Documents = await DocumentService.GetPublicDocumentsAsync();
+        }
+
+        if (MaxItems.HasValue && Documents != null)
+        {
+            Documents = Documents.Take(MaxItems.Value).ToList();
+        }
+    }
+
+    private string GetDocumentTypeLabel(DocumentType type)
+    {
+        return type switch
+        {
+            DocumentType.NOC => "NOC",
+            DocumentType.Affiliation => "Affiliation",
+            DocumentType.Prospectus => "Prospectus",
+            DocumentType.Certificate => "Certificate",
+            _ => "Document"
+        };
+    }
+}

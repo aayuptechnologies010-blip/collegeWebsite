@@ -1,0 +1,159 @@
+@page "/p/{Slug}"
+@using Microsoft.Extensions.Options
+@using CollegeWebSite.Domain.Settings
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Components.Public.Layout
+@using CollegeWebSite.Components.Shared
+@inject IOptions<InstitutionSettings> InstitutionOptions
+@inject IPageService PageService
+@inject ISeoService SeoService
+@layout MainLayout
+
+@if (Page != null)
+{
+    <SeoHead Title="@GetSeoBrowserTitle()"
+             Description="@Page.Seo?.MetaDescription"
+             Keywords="@Page.Seo?.MetaKeywords"
+             ImageUrl="@Page.Seo?.OgImageUrl"
+             CanonicalUrl="@GetCanonicalPath()"
+             OgTitle="@Page.Seo?.OgTitle"
+             OgDescription="@Page.Seo?.OgDescription"
+             TwitterCard="@GetTwitterCard()" />
+
+    <StructuredData JsonLd="@SeoService.GenerateWebPageSchema(Page)" />
+
+    <!-- Hero Header for Page -->
+    <section class="relative pt-24 pb-12 lg:pt-32 lg:pb-20 bg-slate-900 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-secondary/10 pointer-events-none"></div>
+        <div class="absolute top-[-20%] right-[-10%] w-[40rem] h-[40rem] bg-primary/10 rounded-full blur-[120px] -z-0"></div>
+        
+        <div class="container-custom relative z-10 text-center space-y-6">
+            <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-primary/20 text-primary-light text-[12px] font-black uppercase tracking-widest border border-white/5">
+                Ishika Academy
+            </div>
+            <h1 class="text-5xl lg:text-8xl font-black text-white leading-tight animate-parallax">
+                @Page.Title
+            </h1>
+            <div class="flex items-center justify-center gap-6 text-slate-400 text-[13px] font-bold uppercase tracking-widest pt-6">
+                <span class="flex items-center gap-2.5"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 8v4l3 3"/></svg> Updated @(InstitutionOptions.Value.AdmissionsOpen ? InstitutionOptions.Value.AcademicYear.Split('-')[0] : DateTime.Now.Year.ToString())</span>
+                <span class="h-1.5 w-1.5 bg-slate-700 rounded-full"></span>
+                <span class="text-primary italic">Official Portal</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 lg:py-24 bg-white relative">
+        <div class="container-custom">
+            <Breadcrumb Items="@GetBreadcrumbItems()" />
+        </div>
+        <div class="container-custom">
+            <div class="flex flex-col lg:grid lg:grid-cols-12 gap-12 lg:gap-20">
+                
+                <!-- Main Content Body -->
+                <div class="lg:col-span-8 animate-parallax">
+                    <div class="prose prose-slate prose-lg max-w-none 
+                                prose-headings:font-black prose-headings:text-slate-900 prose-headings:tracking-tighter
+                                prose-p:text-slate-600 prose-p:leading-relaxed prose-p:font-light
+                                prose-strong:text-primary prose-strong:font-bold
+                                prose-a:text-secondary prose-a:font-bold prose-a:no-underline hover:prose-a:underline
+                                prose-img:rounded-[2rem] prose-img:shadow-premium border-l-2 border-slate-50 pl-6 lg:pl-12">
+                        @((MarkupString)Page.ContentData)
+                    </div>
+                    
+                    <!-- Bottom Action Point -->
+                    <div class="mt-20 p-10 lg:p-16 bg-slate-50 rounded-[4rem] border border-slate-100 flex flex-col md:flex-row items-center justify-between gap-10">
+                        <div class="space-y-3 text-center md:text-left">
+                             <h4 class="text-2xl lg:text-3xl font-black text-slate-900 leading-tight">Interested in this program?</h4>
+                             <p class="text-lg text-slate-500 font-medium">Seats are limited for the current academic session.</p>
+                        </div>
+                        <a href="/apply" class="px-10 py-5 bg-primary text-white font-black rounded-2xl shadow-xl hover:scale-105 transition-transform shrink-0 uppercase tracking-widest text-[14px]">
+                            Apply for Admission
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Sidebar Contextual Info -->
+                <div class="lg:col-span-4 space-y-8 animate-parallax" style="animation-delay: 0.2s">
+                    <div class="bg-white rounded-[2.5rem] p-8 shadow-premium border border-slate-50 space-y-6">
+                        <h4 class="text-sm font-black uppercase tracking-widest text-slate-400">Quick Contact</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-primary"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div>
+                                <span class="text-sm font-bold text-slate-900">@InstitutionOptions.Value.Contact.Phone</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-secondary"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+                                <span class="text-sm font-bold text-slate-900">@InstitutionOptions.Value.Contact.Email</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative rounded-[2.5rem] overflow-hidden group shadow-premium aspect-square text-white">
+                        <img src="https://images.unsplash.com/photo-1576091160550-2173bdb999ef?auto=format&fit=crop&q=80&w=400" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6">
+                            <p class="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Visit Campus</p>
+                            <h5 class="text-xl font-black">Modern Infrastructure</h5>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <!-- Loading State -->
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="flex flex-col items-center gap-4">
+            <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Synchronizing Campus Content</p>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Slug { get; set; }
+
+    private CollegeWebSite.Domain.Entities.PageContent Page { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Page = await PageService.GetPageBySlugAsync(Slug);
+    }
+
+    private List<BreadcrumbItem> GetBreadcrumbItems()
+    {
+        if (Page == null)
+            return new List<BreadcrumbItem>();
+
+        return new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem { Name = "Home", Url = "/" },
+            new BreadcrumbItem { Name = Page.Title, Url = $"/p/{Page.Slug}" }
+        };
+    }
+
+    private string GetSeoBrowserTitle()
+    {
+        if (!string.IsNullOrWhiteSpace(Page?.Seo?.MetaTitle))
+            return Page!.Seo!.MetaTitle!;
+        return $"{Page!.Title} | Ishika Nursing";
+    }
+
+    private string? GetCanonicalPath()
+    {
+        var c = Page?.Seo?.CanonicalUrl;
+        if (string.IsNullOrWhiteSpace(c))
+            return $"/p/{Page!.Slug}";
+        return c;
+    }
+
+    private string GetTwitterCard()
+    {
+        var t = Page?.Seo?.TwitterCard;
+        return string.IsNullOrWhiteSpace(t) ? "summary_large_image" : t!;
+    }
+}

@@ -1,0 +1,284 @@
+is_global = true
+build_property.TargetFramework = net10.0
+build_property.TargetFramework = net10.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v10.0
+build_property.EntryPointFilePath = 
+build_property.RootNamespace = CollegeWebSite
+build_property.RootNamespace = CollegeWebSite
+build_property.ProjectDir = C:\Ayup technologies\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 10.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Ayup technologies\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 10.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Layout/AdminLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxMYXlvdXRcQWRtaW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Dashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xEYXNoYm9hcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Diagnostics/LogViewer.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xEaWFnbm9zdGljc1xMb2dWaWV3ZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Events/EventEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xFdmVudHNcRXZlbnRFZGl0b3IucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Events/EventList.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xFdmVudHNcRXZlbnRMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Faculty/FacultyEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xGYWN1bHR5XEZhY3VsdHlFZGl0b3IucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Faculty/FacultyList.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xGYWN1bHR5XEZhY3VsdHlMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Gallery/GalleryManager.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xHYWxsZXJ5XEdhbGxlcnlNYW5hZ2VyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Inquiries/InquiryList.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xJbnF1aXJpZXNcSW5xdWlyeUxpc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/MediaLibrary.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xNZWRpYUxpYnJhcnkucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Notices/NoticeEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xOb3RpY2VzXE5vdGljZUVkaXRvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Notices/NoticeList.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xOb3RpY2VzXE5vdGljZUxpc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Pages/PageEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xQYWdlc1xQYWdlRWRpdG9yLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Pages/PageList.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xQYWdlc1xQYWdlTGlzdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Placements/PlacementEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xQbGFjZW1lbnRzXFBsYWNlbWVudEVkaXRvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Placements/PlacementList.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xQbGFjZW1lbnRzXFBsYWNlbWVudExpc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Popups/PopupEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xQb3B1cHNcUG9wdXBFZGl0b3IucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Popups/PopupList.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xQb3B1cHNcUG9wdXBMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Results/ResultEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xSZXN1bHRzXFJlc3VsdEVkaXRvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Results/ResultList.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xSZXN1bHRzXFJlc3VsdExpc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Settings/HeroSettings.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xTZXR0aW5nc1xIZXJvU2V0dGluZ3MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Settings/ThemeSettings.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xTZXR0aW5nc1xUaGVtZVNldHRpbmdzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Syllabus/SyllabusEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xTeWxsYWJ1c1xTeWxsYWJ1c0VkaXRvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Pages/Syllabus/SyllabusList.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQYWdlc1xTeWxsYWJ1c1xTeWxsYWJ1c0xpc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Admin/Shared/MediaPicker.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxTaGFyZWRcTWVkaWFQaWNrZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/App.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Layout/AppFooter.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcTGF5b3V0XEFwcEZvb3Rlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Layout/AppHeader.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcTGF5b3V0XEFwcEhlYWRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcTGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/Apply.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcQXBwbHkucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/Contact.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcQ29udGFjdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/Curriculum.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcQ3VycmljdWx1bS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/DynamicPage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcRHluYW1pY1BhZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/Events.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcRXZlbnRzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/Faculty.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcRmFjdWx0eS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/Gallery.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcR2FsbGVyeS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcSG9tZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/NotFound.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcTm90Rm91bmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/Notices.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcTm90aWNlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/Placements.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcUGxhY2VtZW50cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/Results.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcUmVzdWx0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/RobotsTxt.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcUm9ib3RzVHh0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/Sitemap.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcU2l0ZW1hcC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Pages/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcUGFnZXNcX0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Sections/CoursesHighlight.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcU2VjdGlvbnNcQ291cnNlc0hpZ2hsaWdodC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Sections/FacilitiesHighlight.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcU2VjdGlvbnNcRmFjaWxpdGllc0hpZ2hsaWdodC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Sections/FeaturesSection.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcU2VjdGlvbnNcRmVhdHVyZXNTZWN0aW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Sections/HeroSection.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcU2VjdGlvbnNcSGVyb1NlY3Rpb24ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Sections/LatestNotices.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcU2VjdGlvbnNcTGF0ZXN0Tm90aWNlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Sections/PageViewer.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcU2VjdGlvbnNcUGFnZVZpZXdlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Sections/PopupManager.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcU2VjdGlvbnNcUG9wdXBNYW5hZ2VyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Sections/PrincipalMessage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcU2VjdGlvbnNcUHJpbmNpcGFsTWVzc2FnZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Sections/StatsSection.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcU2VjdGlvbnNcU3RhdHNTZWN0aW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Shared/DocumentList.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcU2hhcmVkXERvY3VtZW50TGlzdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Public/Shared/InquiryForm.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQdWJsaWNcU2hhcmVkXElucXVpcnlGb3JtLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Routes.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Shared/Breadcrumb.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcQnJlYWRjcnVtYi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Shared/NoticeTicker.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcTm90aWNlVGlja2VyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Shared/OptimizedImage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcT3B0aW1pemVkSW1hZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Shared/SeoHead.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcU2VvSGVhZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Shared/StructuredData.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcU3RydWN0dXJlZERhdGEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/Shared/ThemeToggle.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcVGhlbWVUb2dnbGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Ayup technologies/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite-ishikanursingcollege-master/CollegeWebSite/Components/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 

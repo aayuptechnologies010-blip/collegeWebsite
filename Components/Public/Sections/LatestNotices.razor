@@ -1,0 +1,129 @@
+@using CollegeWebSite.Domain.Entities
+@using CollegeWebSite.Services.Interfaces
+@inject INoticeService NoticeService
+
+<section class="py-4 lg:py-8 bg-white border-y border-slate-50 overflow-hidden relative">
+    <div class="container-custom">
+        <div class="bg-primary rounded-2xl px-6 py-3 lg:py-4.5 flex flex-col lg:flex-row items-center gap-4 lg:gap-8 relative shadow-premium border border-white/10">
+            <!-- Label -->
+            <div class="shrink-0 flex items-center gap-3">
+                <div class="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary-light animate-pulse border border-white/10">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                </div>
+                <div class="space-y-0.5">
+                    <p class="text-[10px] font-black text-primary-light uppercase tracking-widest leading-none">ALERT SYSTEM</p>
+                    <h3 class="text-[13px] font-black text-white tracking-tight leading-none uppercase">Bulletins</h3>
+                </div>
+            </div>
+
+            <!-- Vertical Divider (Hidden on Mobile) -->
+            <div class="hidden lg:block h-10 w-px bg-white/10"></div>
+
+            <!-- Notices Crawler -->
+            <div class="flex-1 w-full overflow-hidden relative">
+                @if (IsLoading)
+                {
+                    <div class="flex items-center gap-6 animate-pulse">
+                        <div class="h-5 w-48 bg-white/10 rounded-full"></div>
+                        <div class="h-5 w-80 bg-white/10 rounded-full"></div>
+                    </div>
+                }
+                else if (ActiveNotices.Any())
+                {
+                    <div class="notice-track flex items-center gap-16 whitespace-nowrap lg:animate-marquee">
+                        @foreach (var notice in ActiveNotices)
+                        {
+                            <div class="flex items-center gap-6 group cursor-pointer" @onclick="() => NavigateToNotice(notice)">
+                                @if (notice.IsUrgent)
+                                {
+                                    <span class="px-2 py-0.5 rounded bg-red-500 text-white text-[9px] font-black uppercase tracking-widest leading-none">URGENT</span>
+                                }
+                                <span class="text-white font-black text-[13px] uppercase tracking-tighter hover:text-primary-light transition-all">@notice.Title</span>
+                                <span class="text-white/20 text-xl font-black">•</span>
+                            </div>
+                        }
+                        @* Duplicate for seamless loop on desktop marquee *@
+                        @foreach (var notice in ActiveNotices)
+                        {
+                            <div class="hidden lg:flex items-center gap-6 group cursor-pointer" @onclick="() => NavigateToNotice(notice)">
+                                @if (notice.IsUrgent)
+                                {
+                                    <span class="px-2 py-0.5 rounded bg-red-500 text-white text-[9px] font-black uppercase tracking-widest">URGENT</span>
+                                }
+                                <span class="text-white font-black text-[13px] hover:text-primary-light transition-all uppercase tracking-tighter">@notice.Title</span>
+                                <span class="text-white/20 text-xl font-black">•</span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-white/40 text-[11px] font-black uppercase tracking-widest italic">Institutional operations are currently proceeding as scheduled.</p>
+                }
+            </div>
+
+            <!-- CTA -->
+            <div class="shrink-0">
+                <a href="/notices" class="inline-flex items-center gap-2 text-[10px] font-black text-white uppercase tracking-widest hover:text-primary-light transition-all py-2 border-b-2 border-transparent hover:border-primary-light">
+                    LIBRARY ARCHIVE
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                </a>
+            </div>
+            
+            <!-- Abstract Glow -->
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-[60px] pointer-events-none"></div>
+        </div>
+    </div>
+</section>
+
+
+<style>
+    @@keyframes marquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    .lg\:animate-marquee {
+        animation: marquee 30s linear infinite;
+    }
+    .notice-track:hover {
+        animation-play-state: paused;
+    }
+    @@media (max-width: 1024px) {
+        .notice-track {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            white-space: normal;
+        }
+    }
+</style>
+
+@code {
+    [Inject] NavigationManager Nav { get; set; } = default!;
+    private List<CampusNotice> ActiveNotices { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ActiveNotices = await NoticeService.GetActiveNoticesAsync();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void NavigateToNotice(CampusNotice notice)
+    {
+        if (!string.IsNullOrEmpty(notice.LinkUrl))
+        {
+            Nav.NavigateTo(notice.LinkUrl);
+        }
+        else
+        {
+            Nav.NavigateTo("/notices");
+        }
+    }
+}

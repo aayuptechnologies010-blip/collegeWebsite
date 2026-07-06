@@ -1,0 +1,121 @@
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Options
+@using CollegeWebSite.Domain.Settings
+@inject NavigationManager NavManager
+@inject IOptions<SeoSettings> SeoOptions
+
+<PageTitle>@EffectiveTitle</PageTitle>
+
+<HeadContent>
+    <meta name="description" content="@EffectiveDescription" />
+    <meta name="keywords" content="@EffectiveKeywords" />
+    <meta name="author" content="@Seo.Author" />
+    <meta name="robots" content="@EffectiveRobots" />
+    <meta name="googlebot" content="@EffectiveRobots" />
+    <meta name="geo.region" content="@Seo.GeoRegion" />
+    <meta name="geo.placename" content="@Seo.GeoPlacename" />
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="@OgType" />
+    <meta property="og:site_name" content="@Seo.SiteName" />
+    <meta property="og:locale" content="@Seo.OgLocale.Replace('_', '-')" />
+    <meta property="og:url" content="@AbsolutePageUrl" />
+    <meta property="og:title" content="@EffectiveOgTitle" />
+    <meta property="og:description" content="@EffectiveOgDescription" />
+    <meta property="og:image" content="@AbsoluteImageUrl" />
+    <meta property="og:image:secure_url" content="@AbsoluteImageUrl" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="@EffectiveOgTitle" />
+    <meta itemprop="name" content="@EffectiveOgTitle" />
+    <meta itemprop="description" content="@EffectiveOgDescription" />
+    <meta itemprop="image" content="@AbsoluteImageUrl" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="@TwitterCard" />
+    <meta name="twitter:url" content="@AbsolutePageUrl" />
+    <meta name="twitter:title" content="@EffectiveOgTitle" />
+    <meta name="twitter:description" content="@EffectiveOgDescription" />
+    <meta name="twitter:image" content="@AbsoluteImageUrl" />
+    @if (!string.IsNullOrWhiteSpace(Seo.TwitterSite))
+    {
+        <meta name="twitter:site" content="@($"@{Seo.TwitterSite.TrimStart('@')}")" />
+        <meta name="twitter:creator" content="@($"@{Seo.TwitterSite.TrimStart('@')}")" />
+    }
+
+    <link rel="canonical" href="@AbsolutePageUrl" />
+    <link rel="alternate" hreflang="en-in" href="@AbsolutePageUrl" />
+    <link rel="alternate" hreflang="x-default" href="@AbsolutePageUrl" />
+</HeadContent>
+
+@code {
+    private SeoSettings Seo => SeoOptions.Value;
+
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public string? Keywords { get; set; }
+    [Parameter] public string? ImageUrl { get; set; }
+    [Parameter] public string? CanonicalUrl { get; set; }
+    /// <summary>Optional override for og:title / twitter:title (defaults to page title).</summary>
+    [Parameter] public string? OgTitle { get; set; }
+    [Parameter] public string? OgDescription { get; set; }
+    [Parameter] public string OgType { get; set; } = "website";
+    [Parameter] public string TwitterCard { get; set; } = "summary_large_image";
+    /// <summary>When true, sets robots to noindex,follow.</summary>
+    [Parameter] public bool NoIndex { get; set; }
+    /// <summary>Explicit robots directive; overrides NoIndex when set.</summary>
+    [Parameter] public string? Robots { get; set; }
+
+    private string EffectiveTitle => string.IsNullOrWhiteSpace(Title)
+        ? Seo.DefaultTitleSuffix
+        : Title;
+
+    private string EffectiveDescription => string.IsNullOrWhiteSpace(Description)
+        ? Seo.DefaultDescription
+        : Description!;
+
+    private string EffectiveKeywords => string.IsNullOrWhiteSpace(Keywords)
+        ? Seo.DefaultKeywords
+        : Keywords!;
+
+    private string EffectiveOgTitle => string.IsNullOrWhiteSpace(OgTitle) ? EffectiveTitle : OgTitle!;
+    private string EffectiveOgDescription => string.IsNullOrWhiteSpace(OgDescription) ? EffectiveDescription : OgDescription!;
+
+    private string EffectiveRobots
+    {
+        get
+        {
+            if (!string.IsNullOrWhiteSpace(Robots)) return Robots!;
+            return NoIndex ? "noindex, follow" : Seo.RobotsDefault;
+        }
+    }
+
+    private string AbsoluteImageUrl => GetAbsoluteUrl(ImageUrl ?? Seo.DefaultOgImage);
+
+    private string AbsolutePageUrl
+    {
+        get
+        {
+            if (!string.IsNullOrWhiteSpace(CanonicalUrl))
+                return GetAbsoluteUrl(CanonicalUrl.Trim());
+            try
+            {
+                return new Uri(NavManager.Uri).GetLeftPart(UriPartial.Path);
+            }
+            catch
+            {
+                return NavManager.BaseUri.TrimEnd('/');
+            }
+        }
+    }
+
+    private string GetAbsoluteUrl(string path)
+    {
+        if (string.IsNullOrEmpty(path)) return "";
+        if (path.StartsWith("http", StringComparison.OrdinalIgnoreCase)) return path;
+
+        var baseUri = NavManager.BaseUri.TrimEnd('/');
+        var cleanPath = path.TrimStart('/');
+        return $"{baseUri}/{cleanPath}";
+    }
+}

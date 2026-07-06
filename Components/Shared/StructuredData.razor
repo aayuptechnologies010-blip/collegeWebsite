@@ -1,0 +1,15 @@
+@using Microsoft.AspNetCore.Components.Web
+@inject NavigationManager NavManager
+
+@if (!string.IsNullOrEmpty(JsonLd))
+{
+    <HeadContent>
+        <script type="application/ld+json">
+            @((MarkupString)JsonLd)
+        </script>
+    </HeadContent>
+}
+
+@code {
+    [Parameter] public string JsonLd { get; set; } = string.Empty;
+}

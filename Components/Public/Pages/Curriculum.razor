@@ -1,0 +1,154 @@
+@page "/curriculum"
+@using CollegeWebSite.Components.Public.Layout
+@using CollegeWebSite.Components.Shared
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@layout MainLayout
+@inject ISyllabusService SyllabusService
+@inject ISeoService SeoService
+
+<SeoHead Title="Syllabus & Curriculum | Ishika Nursing & Paramedical Studies"
+         Description="GNM, ANM, and paramedical syllabus and curriculum information at Ishika Nursing College, Kendujhar — aligned with regulatory standards."
+         Keywords="GNM syllabus Odisha, ANM curriculum Kendujhar, nursing course structure Ishika, paramedical syllabus" />
+
+@foreach(var course in AvailableCourses)
+{
+    @* Generate course schema with default description for those not clicked yet *@
+    <StructuredData JsonLd="@SeoService.GenerateCourseSchema(course, $"Official {course} curriculum at Ishika Nursing & Paramedical Studies, recognized by ONMRC.")" />
+}
+
+<!-- Premium Hero -->
+<section class="relative py-16 lg:py-24 bg-slate-50 overflow-hidden">
+    <!-- Ambient Background -->
+    <div class="absolute top-0 right-0 w-[60rem] h-[60rem] bg-amber-100/30 rounded-full blur-[120px] pointer-events-none translate-x-1/2 -translate-y-1/2"></div>
+    
+    <div class="container-custom relative z-10">
+        <div class="max-w-4xl space-y-10">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm animate-in fade-in slide-in-from-left-4 duration-700">
+                <span class="flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Institutional Curriculums</span>
+            </div>
+            
+            <h1 class="text-3xl lg:text-5xl font-black text-slate-900 leading-tight tracking-tight animate-in fade-in slide-in-from-left-8 duration-700 delay-100 uppercase">
+                Mastering Clinical <br />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 italic">Nursing Excellence.</span>
+            </h1>
+            
+            <p class="text-slate-500 font-bold text-[14px] lg:text-[16px] max-w-2xl leading-relaxed animate-in fade-in slide-in-from-left-12 duration-700 delay-200 uppercase tracking-tight">
+                A rigorous, multi-dimensional academic framework designed in accordance with the Odisha Nursing & Midwifery Registration Council (ONMRC) protocols.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Curriculum Filter & Grid -->
+<section class="pb-24 lg:pb-32 bg-slate-50">
+    <div class="container-custom">
+        <div class="space-y-16">
+            <!-- Filter Tabs -->
+            <div class="flex flex-wrap gap-3 items-center">
+                <button @onclick='() => FilterCourse("")' class="px-7 py-3 @(string.IsNullOrEmpty(SelectedFilter) ? "bg-primary text-white shadow-premium border border-white/10" : "bg-white text-slate-400 hover:bg-slate-100 border border-slate-100") rounded-xl font-black text-[11px] uppercase tracking-widest transition-all">All Tracks</button>
+                @foreach(var course in AvailableCourses)
+                {
+                    <button @onclick='() => FilterCourse(course)' class="px-7 py-3 @(SelectedFilter == course ? "bg-primary text-white shadow-premium border border-white/10" : "bg-white text-slate-400 hover:bg-slate-100 border border-slate-100") rounded-xl font-black text-[11px] uppercase tracking-widest transition-all">@course</button>
+                }
+            </div>
+
+            <!-- Subject Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+                @if (IsLoading)
+                {
+                    @for(int i=0; i<6; i++)
+                    {
+                        <div class="h-64 bg-white border border-slate-100 rounded-3xl animate-pulse"></div>
+                    }
+                }
+                else if (FilteredSyllabuses.Any())
+                {
+                    @foreach (var subject in FilteredSyllabuses)
+                    {
+                        <div class="group relative bg-white rounded-3xl p-10 lg:p-12 border border-slate-100 shadow-premium hover:shadow-2xl transition-all group duration-500">
+                            <div class="h-full flex flex-col justify-between space-y-10 relative z-10">
+                                <div class="space-y-8">
+                                    <div class="flex justify-between items-start">
+                                        <div class="space-y-1.5">
+                                            <p class="text-[10px] font-black text-amber-500 uppercase tracking-widest">ACADEMIC YEAR @subject.AcademicYear</p>
+                                            <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">FACULTY OF @subject.CourseName</p>
+                                        </div>
+                                        <div class="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-amber-500 group-hover:text-white transition-all transform group-hover:rotate-12 shadow-sm">
+                                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="space-y-4">
+                                        <h3 class="text-2xl font-black text-slate-900 tracking-tight leading-tight group-hover:text-amber-600 transition-all uppercase">@subject.Subject</h3>
+                                        <p class="text-slate-500 font-bold leading-relaxed text-[13px] lg:text-[14px] line-clamp-3 uppercase tracking-tight">@subject.Description</p>
+                                    </div>
+                                </div>
+
+                                <div class="pt-6 border-t border-slate-100 flex items-center justify-between">
+                                     <div class="flex items-center gap-2">
+                                         <div class="h-1.5 w-1.5 rounded-full bg-amber-500"></div>
+                                         <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">VALIDATED SYLLABUS</span>
+                                     </div>
+                                     <button class="flex items-center gap-2 text-slate-900 group/btn">
+                                         <span class="text-[10px] font-black uppercase tracking-widest group-hover/btn:pr-1 transition-all">VIEW DETAILS</span>
+                                         <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                                     </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Premium Background Shine -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-3xl"></div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@code {
+    private List<Syllabus> AllSyllabuses { get; set; } = new();
+    private List<Syllabus> FilteredSyllabuses { get; set; } = new();
+    private List<string> AvailableCourses { get; set; } = new();
+    private string SelectedFilter { get; set; } = "";
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSyllabuses();
+    }
+
+    private async Task LoadSyllabuses()
+    {
+        try 
+        {
+            await Task.Delay(800); 
+            AllSyllabuses = await SyllabusService.GetAllSyllabusesAsync(onlyActive: true);
+            AvailableCourses = await SyllabusService.GetAvailableCoursesAsync();
+            FilterCourse(SelectedFilter);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void FilterCourse(string course)
+    {
+        SelectedFilter = course;
+        if (string.IsNullOrEmpty(course))
+        {
+            FilteredSyllabuses = AllSyllabuses;
+        }
+        else
+        {
+            FilteredSyllabuses = AllSyllabuses.Where(s => s.CourseName == course).ToList();
+        }
+    }
+}

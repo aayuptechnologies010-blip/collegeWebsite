@@ -1,0 +1,178 @@
+@page "/gallery"
+@using CollegeWebSite.Components.Public.Layout
+@using CollegeWebSite.Components.Shared
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@layout MainLayout
+@inject IGalleryService GalleryService
+
+<SeoHead Title="Campus Gallery | Ishika Nursing & Paramedical Studies"
+         Description="Photo gallery of Ishika Nursing College — labs, classrooms, campus life, and clinical training facilities in Kendujhar."
+         Keywords="Ishika nursing photos, nursing college campus Kendujhar, medical lab gallery Odisha" />
+
+<!-- Page Header -->
+<section class="relative pt-24 pb-20 lg:pt-32 lg:pb-32 bg-slate-900 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-secondary/10 pointer-events-none"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70rem] h-[70rem] bg-primary/10 rounded-full blur-[140px] -z-0"></div>
+    
+    <div class="container-custom relative z-10 text-center space-y-8">
+        <span class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/5 text-primary-light text-[12px] font-black uppercase tracking-[0.3em] border border-white/10 shadow-2xl backdrop-blur-md">
+            Visual Campus Tour
+        </span>
+        <h1 class="text-5xl lg:text-8xl font-black text-white leading-tight uppercase tracking-tighter">
+            Campus <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-700 to-secondary italic">Reflections.</span>
+        </h1>
+        <p class="text-slate-400 font-bold text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed uppercase tracking-tight">
+            Witness the elite environment where medical excellence meets compassionate academic care.
+        </p>
+    </div>
+</section>
+
+<!-- Gallery Grid -->
+<section class="py-20 lg:py-32 bg-white">
+    <div class="container-custom">
+        
+        <!-- Category Filter -->
+        <div class="flex flex-wrap justify-center gap-4 mb-16 lg:mb-24">
+            <button @onclick="() => FilterCategory(null)" class="px-8 py-3.5 rounded-2xl text-[12px] font-black uppercase tracking-widest transition-all duration-500 border @(ActiveCategoryId == null ? "bg-slate-900 text-white border-slate-900 shadow-premium" : "bg-white text-slate-400 border-slate-100 hover:border-slate-300 hover:text-slate-900")">
+                All Media
+            </button>
+            @foreach (var cat in Categories)
+            {
+                <button @onclick="() => FilterCategory(cat.Id)" class="px-8 py-3.5 rounded-2xl text-[12px] font-black uppercase tracking-widest transition-all duration-500 border @(ActiveCategoryId == cat.Id ? "bg-slate-900 text-white border-slate-900 shadow-premium" : "bg-white text-slate-400 border-slate-100 hover:border-slate-300 hover:text-slate-900")">
+                    @cat.Name
+                </button>
+            }
+        </div>
+
+        <!-- Images Masonry-style Grid -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10">
+            @if (IsLoading)
+            {
+                @for(int i=0; i<8; i++)
+                {
+                    <div class="aspect-[4/5] bg-slate-50 rounded-3xl animate-pulse"></div>
+                }
+            }
+            else if (FilteredImages.Any())
+            {
+                var index = 0;
+                @foreach (var img in FilteredImages)
+                {
+                    <div class="group relative rounded-[2.5rem] border border-slate-100 overflow-hidden bg-slate-50 shadow-glass cursor-pointer animate-parallax @(index % 5 == 0 ? "row-span-2 aspect-[4/6]" : "aspect-[4/5]")" style="animation-delay: @(index * 0.05)s" @onclick="() => OpenLightbox(img)">
+                        <OptimizedImage Media="@img.Media" 
+                                        AltText="@img.Title"
+                                        Class="w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-110 group-hover:rotate-1" />
+                        
+                        <!-- Premium Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8 lg:p-10">
+                            <span class="text-[10px] font-black text-primary-light uppercase tracking-widest mb-2">@img.Category?.Name</span>
+                            <h4 class="text-white font-black text-lg lg:text-xl leading-tight uppercase tracking-tight">@img.Title</h4>
+                        </div>
+                        
+                        <!-- Action Icon -->
+                        <div class="absolute top-6 right-6 h-12 w-12 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
+                        </div>
+                    </div>
+                    index++;
+                }
+            }
+            else
+            {
+                <div class="col-span-full py-32 text-center">
+                    <p class="text-slate-400 font-bold uppercase tracking-widest text-[14px]">NO MEDIA FOUND IN THIS CATEGORY</p>
+                </div>
+            }
+        </div>
+
+    </div>
+</section>
+
+<!-- Lightbox Modal (Simulated) -->
+@if (SelectedImage != null)
+{
+    <div class="fixed inset-0 z-[100] flex items-center justify-center p-6 lg:p-24 animate-in fade-in duration-500">
+        <div class="absolute inset-0 bg-primary/95 backdrop-blur-2xl" @onclick="CloseLightbox"></div>
+        
+        <div class="relative max-w-7xl w-full h-full flex flex-col lg:flex-row items-center gap-12 lg:gap-20 animate-in zoom-in slide-in-from-bottom-12 duration-700">
+            <!-- Image Panel -->
+            <div class="flex-1 h-full flex items-center justify-center">
+                <OptimizedImage Media="@SelectedImage.Media" 
+                                AltText="@SelectedImage.Title"
+                                Class="max-w-full max-h-full rounded-3xl shadow-premium border border-white/10" 
+                                ContainerClass="w-full h-full flex items-center justify-center" />
+            </div>
+            
+            <!-- Info Panel -->
+            <div class="w-full lg:w-96 shrink-0 space-y-8 text-white text-center lg:text-left">
+                <div class="space-y-2">
+                    <span class="text-[10px] font-black text-primary-light uppercase tracking-widest">@SelectedImage.Category?.Name</span>
+                    <h2 class="text-3xl lg:text-4xl font-black leading-tight uppercase">@SelectedImage.Title</h2>
+                </div>
+                
+                @if (!string.IsNullOrEmpty(SelectedImage.Description))
+                {
+                    <p class="text-slate-100/70 font-bold text-[14px] lg:text-[16px] leading-relaxed uppercase tracking-tight">@SelectedImage.Description</p>
+                }
+                
+                <div class="pt-6 flex flex-col gap-4">
+                     <div class="p-5 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-4">
+                        <div class="h-12 w-12 rounded-xl bg-primary/20 text-primary-light flex items-center justify-center shrink-0">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <div>
+                            <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest">ARCHIVED RECORD</p>
+                            <p class="text-[13px] font-black uppercase tracking-tight">SESSION 2024-25</p>
+                        </div>
+                     </div>
+                     <button @onclick="CloseLightbox" class="w-full py-4 bg-white text-slate-900 font-black rounded-2xl hover:bg-primary-light hover:text-primary transition-all text-[12px] tracking-widest uppercase">CLOSE PREVIEW</button>
+                </div>
+            </div>
+
+            <!-- Close Trigger -->
+            <button @onclick="CloseLightbox" class="absolute -top-8 -right-4 lg:top-0 lg:right-0 h-14 w-14 rounded-2xl bg-white/10 text-white flex items-center justify-center hover:bg-red-500 transition-all border border-white/10">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    private List<GalleryCategory> Categories { get; set; } = new();
+    private List<GalleryImage> AllImages { get; set; } = new();
+    private List<GalleryImage> FilteredImages { get; set; } = new();
+    private long? ActiveCategoryId { get; set; }
+    private GalleryImage? SelectedImage { get; set; }
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try 
+        {
+            Categories = await GalleryService.GetCategoriesWithImagesAsync();
+            AllImages = Categories.SelectMany(c => c.Images).OrderBy(i => i.DisplayOrder).ToList();
+            FilteredImages = AllImages;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void FilterCategory(long? categoryId)
+    {
+        ActiveCategoryId = categoryId;
+        if (categoryId == null)
+        {
+            FilteredImages = AllImages;
+        }
+        else
+        {
+            FilteredImages = AllImages.Where(i => i.GalleryCategoryId == categoryId).ToList();
+        }
+    }
+
+    private void OpenLightbox(GalleryImage img) => SelectedImage = img;
+    private void CloseLightbox() => SelectedImage = null;
+}

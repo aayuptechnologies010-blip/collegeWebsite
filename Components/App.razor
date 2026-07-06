@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <ResourcePreloader />
+    <link rel="stylesheet" href="@Assets["css/styles.css"]" />
+    <ImportMap />
+    <link rel="icon" type="image/png" href="@Assets["favicon.png"]" />
+    <link rel="apple-touch-icon" href="@Assets["favicon.png"]" />
+    <link rel="alternate" type="application/rss+xml" title="Ishika Nursing — News &amp; updates" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Ishika Nursing — Events" href="/feed/events.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Ishika Nursing — Notices" href="/feed/notices.xml" />
+    <meta name="theme-color" content="#01427a" />
+    <HeadOutlet />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-10ZK33VQWN"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-10ZK33VQWN');
+    </script>
+    <script>
+        window.setDocTheme = (theme) => {
+            const themes = {
+                classic: { primary: '#01427a', secondary: '#e31e24', accent: '#2e7d32', primaryLight: '#f0f7ff', secondaryLight: '#fff1f2' },
+                oceanic: { primary: '#0c4a6e', secondary: '#0ea5e9', accent: '#0369a1', primaryLight: '#f0f9ff', secondaryLight: '#e0f2fe' },
+                emerald: { primary: '#065f46', secondary: '#10b981', accent: '#047857', primaryLight: '#f0fdf4', secondaryLight: '#d1fae5' },
+                amethyst: { primary: '#581c87', secondary: '#a855f7', accent: '#7e22ce', primaryLight: '#faf5ff', secondaryLight: '#f3e8ff' },
+                sunset: { primary: '#9f1239', secondary: '#f43f5e', accent: '#be123c', primaryLight: '#fff1f2', secondaryLight: '#ffe4e6' },
+                midnight: { primary: '#0f172a', secondary: '#334155', accent: '#1e293b', primaryLight: '#1e293b', secondaryLight: '#334155' }
+            };
+            const active = themes[theme] || themes.classic;
+            const root = document.documentElement;
+            root.style.setProperty('--primary-color', active.primary);
+            root.style.setProperty('--secondary-color', active.secondary);
+            root.style.setProperty('--accent-color', active.accent);
+            root.style.setProperty('--primary-light-color', active.primaryLight);
+            root.style.setProperty('--secondary-light-color', active.secondaryLight);
+            
+            // Spacious Design Variables
+            root.style.setProperty('--app-radius-full', '2.5rem');
+            root.style.setProperty('--app-radius-sm', '1rem');
+            root.style.setProperty('--app-gap-base', '3.5rem');
+            root.style.setProperty('--app-gap-tight', '1.75rem');
+            root.style.setProperty('--app-padding-base', '4rem');
+            root.style.setProperty('--app-container-max', '90%');
+            
+            if (document.body) {
+                if (theme === 'midnight') {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+            }
+        };
+        // Early init to avoid FOUC - but wait for body to be available
+        const savedTheme = localStorage.getItem('theme') || 'classic';
+        if (document.body) {
+            window.setDocTheme(savedTheme);
+        } else {
+            window.addEventListener('DOMContentLoaded', () => window.setDocTheme(savedTheme));
+        }
+    </script>
+</head>
+
+<body>
+    <Routes @rendermode="InteractiveServer" />
+    @* <PersistComponentState /> *@
+
+    <div id="components-reconnect-modal" class="my-reconnect-modal components-reconnect-hide hidden">
+        <div class="show">
+            <div class="fixed inset-0 flex items-center justify-center bg-gray-900/50 z-50 backdrop-blur-sm">
+                <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
+                    <div class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <p class="text-slate-700 font-medium">Reconnecting to server...</p>
+                </div>
+            </div>
+        </div>
+        <div class="failed">
+            <div class="fixed inset-0 flex items-center justify-center bg-gray-900/50 z-50 backdrop-blur-sm">
+                <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300 max-w-sm text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <h3 class="text-lg font-bold text-slate-900">Connection Lost</h3>
+                    <p class="text-slate-600 text-sm">We could not reconnect to the server. Please check your internet connection.</p>
+                    <a href="" class="px-4 py-2 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors text-sm font-medium">Reload Page</a>
+                </div>
+            </div>
+        </div>
+        <div class="rejected">
+            <div class="fixed inset-0 flex items-center justify-center bg-gray-900/50 z-50 backdrop-blur-sm">
+                <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300 max-w-sm text-center">
+                    <h3 class="text-lg font-bold text-slate-900">Connection Rejected</h3>
+                    <p class="text-slate-600 text-sm">The connection was rejected. Please reload the page.</p>
+                      <a href="" class="px-4 py-2 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors text-sm font-medium">Reload Page</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/popup.js"></script>
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
+</body>
+
+</html>

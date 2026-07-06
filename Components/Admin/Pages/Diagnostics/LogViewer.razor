@@ -1,0 +1,190 @@
+@page "/admin/diagnostics/logs"
+@using System.IO
+@using CollegeWebSite.Components.Admin.Layout
+@layout AdminLayout
+@inject IWebHostEnvironment Env
+@inject NavigationManager Nav
+
+<PageTitle>System Ledger | Ishika Diagnostics</PageTitle>
+
+<div class="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+    <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-md border border-primary/5">
+            System Diagnostics
+        </div>
+        <h1 class="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-none">Operational <br/><span class="text-slate-400">Ledger.</span></h1>
+        <p class="text-slate-500 font-medium text-sm max-w-xl">Monitor institutional events, system health, and real-time execution logs.</p>
+    </div>
+    
+    <div class="flex items-center gap-3">
+        <select @onchange="OnLogFileChanged" class="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-900 shadow-sm focus:ring-2 focus:ring-primary focus:outline-none">
+            @foreach (var file in LogFiles)
+            {
+                <option value="@file.FullName" selected="@(file.FullName == SelectedFile?.FullName)">@file.Name</option>
+            }
+        </select>
+        <button @onclick="LoadLogs" class="p-2.5 bg-slate-900 text-white rounded-xl hover:bg-primary transition-all shadow-md">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+        </button>
+    </div>
+</div>
+
+<div class="grid gap-6">
+    @if (IsLoading)
+    {
+        <div class="h-96 bg-white rounded-[2rem] border border-slate-100 flex items-center justify-center">
+            <div class="flex flex-col items-center gap-3">
+                <div class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Decoding Ledger</p>
+            </div>
+        </div>
+    }
+    else if (LogEntries.Any())
+    {
+        <div class="bg-primary rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden">
+            <div class="p-4 border-b border-white/5 bg-white/10 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="text-[10px] font-black text-white/40 uppercase tracking-widest">Live Output Stream</span>
+                </div>
+                <span class="text-[10px] font-black text-white/20 uppercase">Total Entries: @LogEntries.Count</span>
+            </div>
+            
+            <div class="p-6 font-mono text-[11px] leading-relaxed overflow-x-auto max-h-[600px] custom-scrollbar space-y-1">
+                @foreach (var entry in LogEntries)
+                {
+                    <div class="flex gap-4 group">
+                        <span class="text-slate-600 shrink-0 select-none">@entry.Timestamp</span>
+                        @if (entry.Level == "ERR")
+                        {
+                            <span class="text-red-400 font-black shrink-0">[ERR]</span>
+                            <span class="text-red-300">@entry.Message</span>
+                        }
+                        else if (entry.Level == "WRN")
+                        {
+                            <span class="text-amber-400 font-black shrink-0">[WRN]</span>
+                            <span class="text-amber-200">@entry.Message</span>
+                        }
+                        else if (entry.Level == "INF")
+                        {
+                            <span class="text-blue-400 font-black shrink-0">[INF]</span>
+                            <span class="text-slate-300">@entry.Message</span>
+                        }
+                        else
+                        {
+                            <span class="text-slate-500 shrink-0">@entry.Level</span>
+                            <span class="text-slate-400">@entry.Message</span>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="py-32 bg-white rounded-[3rem] border-4 border-dashed border-slate-100 text-center space-y-4">
+             <div class="h-20 w-20 bg-slate-50 rounded-full flex items-center justify-center text-slate-200 mx-auto">
+                 <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+             </div>
+             <p class="text-slate-400 font-black uppercase tracking-widest text-[10px]">The operational ledger is currently empty for this period.</p>
+        </div>
+    }
+</div>
+
+@code {
+    private List<FileInfo> LogFiles { get; set; } = new();
+    private FileInfo? SelectedFile { get; set; }
+    private List<LogEntry> LogEntries { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFiles();
+        if (LogFiles.Any())
+        {
+            SelectedFile = LogFiles.First();
+            await LoadLogs();
+        }
+        else
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task LoadFiles()
+    {
+        var logsDir = Path.Combine(Env.ContentRootPath, "Logs");
+        if (Directory.Exists(logsDir))
+        {
+            LogFiles = new DirectoryInfo(logsDir)
+                .GetFiles("*.log")
+                .OrderByDescending(f => f.LastWriteTime)
+                .ToList();
+        }
+    }
+
+    private async Task LoadLogs()
+    {
+        if (SelectedFile == null) return;
+        
+        IsLoading = true;
+        LogEntries.Clear();
+        
+        try
+        {
+            // Use FileStream with FileAccess.Read and FileShare.ReadWrite to avoid locking issues
+            using var fs = new FileStream(SelectedFile.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var sr = new StreamReader(fs);
+            
+            string? line;
+            while ((line = await sr.ReadLineAsync()) != null)
+            {
+                var entry = ParseLine(line);
+                if (entry != null) LogEntries.Insert(0, entry); // Latest first
+                if (LogEntries.Count > 1000) break; // Limit view
+            }
+        }
+        catch (Exception ex)
+        {
+            LogEntries.Add(new LogEntry { Timestamp = DateTime.Now.ToString("HH:mm:ss"), Level = "ERR", Message = $"Failed to read log: {ex.Message}" });
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void OnLogFileChanged(ChangeEventArgs e)
+    {
+        var fullPath = e.Value?.ToString();
+        SelectedFile = LogFiles.FirstOrDefault(f => f.FullName == fullPath);
+        _ = LoadLogs();
+    }
+
+    private LogEntry? ParseLine(string line)
+    {
+        // Serilog Format: 2026-02-12 00:35:10.000 +05:30 [INF] Message
+        try 
+        {
+            if (line.Length < 30) return new LogEntry { Message = line, Level = "RAW" };
+            
+            var timestamp = line.Substring(11, 8); // Extract time only for cleaner view
+            var levelStart = line.IndexOf("[") + 1;
+            var level = line.Substring(levelStart, 3);
+            var message = line.Substring(line.IndexOf("]") + 2);
+            
+            return new LogEntry { Timestamp = timestamp, Level = level, Message = message };
+        }
+        catch 
+        {
+            return new LogEntry { Message = line, Level = "RAW" };
+        }
+    }
+
+    public class LogEntry
+    {
+        public string Timestamp { get; set; } = "";
+        public string Level { get; set; } = "";
+        public string Message { get; set; } = "";
+    }
+}

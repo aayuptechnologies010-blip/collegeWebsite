@@ -1,0 +1,81 @@
+@using CollegeWebSite.Domain.Entities
+@using CollegeWebSite.Services.Interfaces
+@inject IPageService PageService
+
+@if (Page != null)
+{
+    // SEO Meta Tags
+    <CollegeWebSite.Components.Shared.SeoHead
+        Title="@(string.IsNullOrWhiteSpace(Page.Seo?.MetaTitle) ? Page.Title : Page.Seo!.MetaTitle!)"
+        Description="@Page.Seo?.MetaDescription"
+        Keywords="@Page.Seo?.MetaKeywords"
+        ImageUrl="@Page.Seo?.OgImageUrl"
+        CanonicalUrl="@(string.IsNullOrWhiteSpace(Page.Seo?.CanonicalUrl) ? null : Page.Seo!.CanonicalUrl)"
+        OgTitle="@Page.Seo?.OgTitle"
+        OgDescription="@Page.Seo?.OgDescription"
+        TwitterCard="@(string.IsNullOrWhiteSpace(Page.Seo?.TwitterCard) ? "summary_large_image" : Page.Seo!.TwitterCard!)" />
+
+    // Content Rendering
+    if (Page.Template != null)
+    {
+        // TODO: Implement Template Rendering Logic (Phase 3)
+        // For now, render raw content
+        <div class="container-custom py-12">
+            @((MarkupString)Page.ContentData)
+        </div>
+    }
+    else
+    {
+        // Default Article Layout
+        <div class="container-custom py-12">
+            <article class="prose prose-slate max-w-none prose-headings:text-slate-900 prose-a:text-primary hover:prose-a:text-sky-600 prose-img:rounded-xl shadow-none">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">@Page.Title</h1>
+                @((MarkupString)Page.ContentData)
+            </article>
+        </div>
+    }
+}
+else if (IsLoading)
+{
+    <div class="min-h-[50vh] flex flex-col items-center justify-center">
+        <div class="h-10 w-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p class="mt-4 text-slate-500 font-medium">Loading content...</p>
+    </div>
+}
+else
+{
+    <div class="container-custom py-12 text-center">
+        <h2 class="text-2xl font-bold text-slate-900">Page Not Found</h2>
+        <p class="text-slate-600 mt-2">The content you requested could not be found.</p>
+        <a href="/" class="btn-primary mt-6 inline-block">Return Home</a>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Slug { get; set; } = string.Empty;
+
+    private PageContent? Page { get; set; }
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        IsLoading = true;
+        try
+        {
+            if (!string.IsNullOrEmpty(Slug))
+            {
+                Page = await PageService.GetPageBySlugAsync(Slug);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log error
+            Console.WriteLine($"Error loading page '{Slug}': {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+}

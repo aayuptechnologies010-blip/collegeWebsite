@@ -1,0 +1,155 @@
+@page "/admin/popups"
+@using CollegeWebSite.Components.Admin.Layout
+@using CollegeWebSite.Domain.Entities
+@using CollegeWebSite.Domain.Enums
+@using CollegeWebSite.Services.Interfaces
+@attribute [AllowAnonymous]
+@layout AdminLayout
+@inject IPopupService PopupService
+@inject NavigationManager Nav
+
+<PageTitle>Announcements | Ishika Admin</PageTitle>
+
+<div class="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
+    <div class="space-y-1">
+        <div class="inline-flex items-center gap-2 px-2 py-0.5 bg-slate-900 text-white text-[8px] font-black uppercase tracking-widest rounded border border-white/10 shadow-sm">
+            Engagement Engine
+        </div>
+        <h1 class="text-2xl font-black text-slate-900 tracking-tight leading-none uppercase">Dynamic <span class="text-slate-400">Popups</span></h1>
+    </div>
+
+    <div class="flex items-center gap-3">
+        <button @onclick='() => Nav.NavigateTo("/admin/popups/create")' class="px-6 py-2.5 bg-primary text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Construct Announcement
+        </button>
+    </div>
+</div>
+
+<div class="grid gap-6">
+    @if (IsLoading)
+    {
+        <div class="flex items-center justify-center py-20">
+            <div class="h-12 w-12 border-4 border-slate-100 border-t-primary rounded-full animate-spin"></div>
+        </div>
+    }
+    else if (Popups.Any())
+    {
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-100">
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Identification</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Rules & Type</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Validity Range</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Efficiency</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Ops</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @foreach (var popup in Popups)
+                    {
+                        <tr class="group hover:bg-slate-50/50 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-10 w-10 @(popup.IsActive ? "bg-primary/10 text-primary" : "bg-slate-100 text-slate-400") rounded-xl flex items-center justify-center font-black">
+                                        @popup.Priority
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-black text-slate-900 uppercase leading-none mb-1">@popup.Title</p>
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">ID: #ANN-@popup.Id</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-0.5 bg-slate-900 text-white text-[7px] font-black uppercase rounded">@popup.Type</span>
+                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[7px] font-black uppercase rounded">@popup.Frequency</span>
+                                    @if (popup.ShowOnMobile) { <span class="text-[8px] text-slate-400">📱</span> }
+                                    @if (popup.ShowOnDesktop) { <span class="text-[8px] text-slate-400">💻</span> }
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="space-y-0.5">
+                                    <p class="text-[10px] font-bold text-slate-700">@(popup.StartDate?.ToString("MMM dd") ?? "Ever") → @(popup.EndDate?.ToString("MMM dd") ?? "Eternal")</p>
+                                    @if (popup.EndDate < DateTime.UtcNow)
+                                    {
+                                        <span class="text-[8px] font-black text-red-500 uppercase tracking-widest">Expired</span>
+                                    }
+                                    else if (!popup.IsActive)
+                                    {
+                                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Dormant</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-[8px] font-black text-green-500 uppercase tracking-widest">Active Live</span>
+                                    }
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="text-center">
+                                        <p class="text-xs font-black text-slate-900 leading-none">@popup.Impressions</p>
+                                        <p class="text-[7px] font-black text-slate-400 uppercase tracking-widest">Views</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-xs font-black text-primary leading-none">@popup.Clicks</p>
+                                        <p class="text-[7px] font-black text-slate-400 uppercase tracking-widest">Clicks</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button @onclick='() => Nav.NavigateTo($"/admin/popups/edit/{popup.Id}")' class="h-8 w-8 bg-slate-900 text-white rounded-lg flex items-center justify-center hover:bg-primary transition-all shadow-lg hover:-translate-y-0.5">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5M18.364 4.636a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.364-9.364z"/></svg>
+                                    </button>
+                                    <button @onclick="() => DeletePopup(popup.Id)" class="h-8 w-8 bg-white text-slate-400 rounded-lg flex items-center justify-center border border-slate-200 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all shadow-sm">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="py-32 text-center bg-white rounded-[3rem] border-2 border-dashed border-slate-100 space-y-6">
+            <div class="h-20 w-20 bg-slate-50 text-slate-200 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M18 8a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V8Z"/></svg>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-xl font-black text-slate-900 uppercase">Silence in the Vault</h3>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest max-w-sm mx-auto">No dynamic popups have been constructed yet. Start by creating an admissions announcement.</p>
+            </div>
+            <button @onclick='() => Nav.NavigateTo("/admin/popups/create")' class="px-8 py-3 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-all shadow-xl shadow-slate-100">Establish First Protocol</button>
+        </div>
+    }
+</div>
+
+@code {
+    private List<AnnouncementPopUp> Popups { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPopups();
+    }
+
+    private async Task LoadPopups()
+    {
+        IsLoading = true;
+        Popups = await PopupService.GetAllPopupsAsync();
+        IsLoading = false;
+    }
+
+    private async Task DeletePopup(long id)
+    {
+        if (await PopupService.DeletePopupAsync(id))
+        {
+            await LoadPopups();
+        }
+    }
+}

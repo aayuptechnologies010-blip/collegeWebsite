@@ -1,0 +1,167 @@
+@page "/admin/notices"
+@using CollegeWebSite.Components.Admin.Layout
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@layout AdminLayout
+@inject INoticeService NoticeService
+@inject NavigationManager Navigation
+
+<PageTitle>Notice Board | Ishika CMS Admin</PageTitle>
+
+<div class="mb-5 flex flex-col lg:flex-row lg:items-end justify-between gap-3 animate-in fade-in slide-in-from-top-4 duration-700">
+    <div class="space-y-1">
+        <div class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-primary/10 text-primary text-[8px] font-black uppercase tracking-widest rounded border border-primary/5">
+            Broadcast Control
+        </div>
+        <h1 class="text-xl lg:text-2xl font-black text-slate-900 tracking-tight leading-none uppercase">Institutional <span class="text-slate-400">Board</span></h1>
+        <p class="text-slate-500 font-bold text-[10px] max-w-xl uppercase tracking-tighter">High-visibility ticker announcements and urgent campus alerts.</p>
+    </div>
+    
+    <button @onclick='() => Navigation.NavigateTo("/admin/notices/edit")' class="group/btn relative px-6 py-2.5 bg-slate-950 text-white font-black text-[9px] uppercase tracking-widest rounded shadow-lg hover:bg-primary transition-all overflow-hidden text-center">
+        <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover/btn:animate-shimmer"></div>
+        <div class="relative flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 0110 15h2l4 4V5l-4 4h-2a4.001 4.001 0 01-4.564-2.683" /></svg>
+            New Bulletin
+        </div>
+    </button>
+</div>
+
+<!-- Stats / Filters Bar -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+    <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm flex items-center gap-3 group hover:border-primary/20 transition-all">
+        <div class="h-8 w-8 rounded bg-green-50 text-green-600 flex items-center justify-center group-hover:scale-105 transition-transform"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
+        <div>
+            <p class="text-[7px] font-black uppercase tracking-widest text-slate-400">Live Feeds</p>
+            <p class="text-base font-black text-slate-900 leading-none">@Notices.Count(n => n.IsActive)</p>
+        </div>
+    </div>
+    <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm flex items-center gap-3 group hover:border-secondary/20 transition-all">
+        <div class="h-8 w-8 rounded bg-secondary/5 text-secondary flex items-center justify-center group-hover:scale-105 transition-transform"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+        <div>
+            <p class="text-[7px] font-black uppercase tracking-widest text-slate-400">Urgent Alerts</p>
+            <p class="text-base font-black text-slate-900 leading-none">@Notices.Count(n => n.IsUrgent)</p>
+        </div>
+    </div>
+    <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm flex items-center gap-3 group hover:border-slate-800 transition-all">
+        <div class="h-8 w-8 rounded bg-slate-50 text-slate-400 flex items-center justify-center group-hover:scale-105 transition-transform"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <div>
+            <p class="text-[7px] font-black uppercase tracking-widest text-slate-400">Total History</p>
+            <p class="text-base font-black text-slate-900 leading-none">@Notices.Count</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 gap-4">
+    @if (IsLoading)
+    {
+        @for(int i=0; i<3; i++)
+        {
+            <div class="h-32 bg-slate-50 border border-slate-100 rounded-2xl animate-pulse"></div>
+        }
+    }
+    else if (Notices.Any())
+    {
+        @foreach (var notice in Notices)
+        {
+            <div class="relative bg-white rounded-lg p-5 lg:p-6 border @(notice.IsUrgent ? "border-primary/20 bg-primary/[0.01]" : "border-slate-100") shadow-sm hover:shadow transition-all group overflow-hidden">
+                @if (notice.IsUrgent)
+                {
+                    <div class="absolute top-0 right-0 w-24 h-0.5 bg-gradient-to-l from-primary to-transparent"></div>
+                }
+
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 relative z-10">
+                    <div class="flex-1 space-y-2">
+                        <div class="flex flex-wrap items-center gap-2">
+                            @if (notice.IsUrgent)
+                            {
+                                <span class="px-1.5 py-0.5 bg-primary text-white text-[7px] font-black uppercase tracking-widest rounded shadow-[0_0_8px_rgba(var(--primary-rgb),0.3)] border border-white/10">Priority Alert</span>
+                            }
+                            <div class="flex items-center gap-1 text-slate-400">
+                                <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                <span class="text-[8px] font-black uppercase tracking-widest">Broadcasted @notice.CreatedOn.ToString("MMM dd, yyyy")</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <h3 class="text-lg font-black text-slate-900 tracking-tight leading-none uppercase @(notice.IsUrgent ? "italic" : "")">@notice.Title</h3>
+                            <p class="text-slate-500 font-bold text-[10px] leading-relaxed max-w-4xl line-clamp-1 italic">"@notice.Content"</p>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(notice.LinkUrl))
+                        {
+                            <div class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-slate-50 rounded border border-slate-100 text-[8px] font-bold text-slate-400">
+                                <svg class="w-2.5 h-2.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                <span>Destination: <span class="text-slate-900 font-black">@notice.LinkUrl</span></span>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="flex items-center gap-2 shrink-0 lg:opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-1 group-hover:translate-x-0">
+                        <button @onclick='() => Navigation.NavigateTo($"/admin/notices/edit/{notice.Id}")' class="h-8 w-8 rounded bg-white text-slate-400 hover:text-blue-500 hover:shadow shadow-sm transition-all flex items-center justify-center border border-slate-100">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                        </button>
+                        <button @onclick="() => HandleDelete(notice.Id)" class="h-8 w-8 rounded bg-white text-slate-400 hover:text-red-500 transition-all hover:bg-white border border-slate-100 hover:shadow shadow-sm flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>
+                    </div>
+                </div>
+                <!-- Background Accent -->
+                <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-slate-50 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="py-32 text-center space-y-8 bg-slate-50/50 rounded-[4rem] border-4 border-dashed border-slate-100">
+            <div class="h-24 w-24 bg-white rounded-full flex items-center justify-center text-slate-200 mx-auto shadow-sm">
+                <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            </div>
+            <div class="space-y-2">
+                <h4 class="text-xl font-black text-slate-900">Academic Silence.</h4>
+                <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">No active broadcasts are currently being streamed.</p>
+            </div>
+            <button class="px-8 py-3 bg-slate-900 text-white font-black text-[10px] uppercase tracking-widest rounded-full shadow-lg hover:bg-primary transition-all">Broadcast Something Now</button>
+        </div>
+    }
+</div>
+
+<style>
+    @@keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    .animate-shimmer {
+        animation: shimmer 2s infinite;
+    }
+</style>
+
+@code {
+    private List<CampusNotice> Notices { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadNotices();
+    }
+
+    private async Task LoadNotices()
+    {
+        try 
+        {
+            await Task.Delay(500); // Aesthetic delay
+            Notices = await NoticeService.GetAllNoticesAsync();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task HandleDelete(long id)
+    {
+        if (await NoticeService.DeleteNoticeAsync(id))
+        {
+            await LoadNotices();
+        }
+    }
+}

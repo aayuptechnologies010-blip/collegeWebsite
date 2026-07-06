@@ -1,0 +1,197 @@
+@page "/admin/inquiries"
+@using CollegeWebSite.Components.Admin.Layout
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@using CollegeWebSite.Domain.Enums
+@layout AdminLayout
+@inject IInquiryService InquiryService
+
+<PageTitle>Inquiry Ledger | Ishika CMS Admin</PageTitle>
+
+<div class="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-700">
+    <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 bg-red-50 text-red-600 text-[9px] font-black uppercase tracking-widest rounded-md border border-red-100">
+            Public Relations
+        </div>
+        <h1 class="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-none">Institutional <br/><span class="text-slate-400">Inquiry Ledger.</span></h1>
+        <p class="text-slate-500 font-medium text-sm max-w-xl">Monitor and respond to prospective student inquiries and campus feedback.</p>
+    </div>
+</div>
+
+<div class="bg-white rounded-3xl border border-slate-100 shadow-premium overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-50/50">
+                    <th class="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Applicant Identity</th>
+                    <th class="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Communication Node</th>
+                    <th class="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Directive / Subject</th>
+                    <th class="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">Action Nexus</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                @if (IsLoading)
+                {
+                    @for(int i=0; i<5; i++)
+                    {
+                        <tr><td colspan="4" class="px-10 py-12 animate-pulse"><div class="h-8 bg-slate-50 rounded-2xl w-full"></div></td></tr>
+                    }
+                }
+                else if (Inquiries.Any())
+                {
+                    @foreach (var inquiry in Inquiries)
+                    {
+                        <tr class="group hover:bg-slate-50/50 transition-all cursor-pointer @(inquiry.Status == InquiryStatus.New ? "bg-red-50/30" : "")" @onclick="() => SelectInquiry(inquiry)">
+                            <td class="px-8 py-5">
+                                <div class="flex items-center gap-4">
+                                    <div class="h-10 w-10 rounded-xl @(inquiry.Status == InquiryStatus.New ? "bg-red-500 text-white" : "bg-slate-100 text-slate-400") flex items-center justify-center font-black shadow-sm text-sm">
+                                        @inquiry.Name.FirstOrDefault()
+                                    </div>
+                                    <div class="space-y-0.5">
+                                        <p class="font-black text-slate-900 text-base tracking-tight leading-none">@inquiry.Name</p>
+                                        <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">@inquiry.SubmittedOn.ToLocalTime().ToString("MMM dd, HH:mm")</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-5">
+                                <div class="space-y-0.5">
+                                    <p class="text-sm font-black text-slate-700 leading-none">@inquiry.Email</p>
+                                    <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">@inquiry.PhoneNumber</p>
+                                </div>
+                            </td>
+                            <td class="px-8 py-5">
+                                <div class="space-y-0.5">
+                                    <p class="text-sm font-black text-slate-900 truncate max-w-[200px] leading-none">@inquiry.Subject</p>
+                                    <span class="px-1.5 py-0.5 @(GetStatusClass(inquiry.Status)) text-[7px] font-black uppercase tracking-widest rounded">@inquiry.Status</span>
+                                </div>
+                            </td>
+                            <td class="px-8 py-5 text-right">
+                                <button @onclick:stopPropagation="true" @onclick="() => HandleDelete(inquiry.Id)" class="h-9 w-9 rounded-xl bg-white border border-slate-100 text-slate-400 hover:text-red-500 hover:shadow-md hover:-translate-y-0.5 transition-all inline-flex items-center justify-center lg:opacity-0 group-hover:opacity-100">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="py-40 text-center">
+                            <div class="h-24 w-24 bg-slate-50 rounded-full flex items-center justify-center text-slate-200 mx-auto mb-6 shadow-inner">
+                                <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                            </div>
+                            <h4 class="text-xl font-black text-slate-900 mb-2">Operational Silence.</h4>
+                            <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">No communication directives received in the current cycle.</p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (SelectedInquiry != null)
+{
+    <!-- Modal: Narrative Insight -->
+    <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[500] flex items-center justify-center p-4" @onclick="() => SelectedInquiry = null">
+        <div class="bg-white rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300" @onclick:stopPropagation="true">
+            <div class="p-8 lg:p-10 space-y-6">
+                <div class="flex items-start justify-between">
+                    <div class="space-y-1.5">
+                        <div class="h-12 w-12 rounded-xl bg-slate-950 text-white flex items-center justify-center text-xl font-black mb-2">
+                            @SelectedInquiry.Name.FirstOrDefault()
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-900 tracking-tight leading-none">@SelectedInquiry.Name</h3>
+                        <p class="text-[9px] font-black text-red-500 uppercase tracking-[0.2em]">Status: @SelectedInquiry.Status</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4 py-4 border-y border-slate-50">
+                        <div class="space-y-0.5">
+                            <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Email</p>
+                            <p class="text-xs font-bold text-slate-900">@SelectedInquiry.Email</p>
+                        </div>
+                        <div class="space-y-0.5">
+                            <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Phone</p>
+                            <p class="text-xs font-bold text-slate-900">@SelectedInquiry.PhoneNumber</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Message Payload</p>
+                        <div class="p-4 rounded-xl bg-slate-50 text-slate-600 text-sm font-light leading-relaxed italic">
+                            "@SelectedInquiry.Message"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    @if (SelectedInquiry.Status == InquiryStatus.New)
+                    {
+                        <button @onclick="() => UpdateStatus(SelectedInquiry.Id, InquiryStatus.InProgress)" class="flex-1 py-3 bg-slate-950 text-white font-black text-[9px] uppercase tracking-widest rounded-xl shadow-xl hover:bg-red-600 transition-all">Engage</button>
+                    }
+                    else if (SelectedInquiry.Status == InquiryStatus.InProgress)
+                    {
+                        <button @onclick="() => UpdateStatus(SelectedInquiry.Id, InquiryStatus.Resolved)" class="flex-1 py-3 bg-green-600 text-white font-black text-[9px] uppercase tracking-widest rounded-xl shadow-xl hover:bg-green-700 transition-all">Resolve</button>
+                    }
+                    <button @onclick="() => SelectedInquiry = null" class="flex-1 py-3 bg-white text-slate-400 font-black text-[9px] uppercase tracking-widest rounded-xl border border-slate-100">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Inquiry> Inquiries { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+    private Inquiry? SelectedInquiry { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadInquiries();
+    }
+
+    private async Task LoadInquiries()
+    {
+        try 
+        {
+            IsLoading = true;
+            Inquiries = await InquiryService.GetAllInquiriesAsync();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void SelectInquiry(Inquiry inquiry)
+    {
+        SelectedInquiry = inquiry;
+    }
+
+    private async Task UpdateStatus(long id, InquiryStatus status)
+    {
+        if (await InquiryService.UpdateInquiryStatusAsync(id, status))
+        {
+            await LoadInquiries();
+            SelectedInquiry = null;
+        }
+    }
+
+    private async Task HandleDelete(long id)
+    {
+        if (await InquiryService.DeleteInquiryAsync(id))
+        {
+            await LoadInquiries();
+        }
+    }
+
+    private string GetStatusClass(InquiryStatus status) => status switch
+    {
+        InquiryStatus.New => "bg-red-100 text-red-600",
+        InquiryStatus.InProgress => "bg-blue-100 text-blue-600",
+        InquiryStatus.Resolved => "bg-green-100 text-green-600",
+        _ => "bg-slate-100 text-slate-600"
+    };
+}

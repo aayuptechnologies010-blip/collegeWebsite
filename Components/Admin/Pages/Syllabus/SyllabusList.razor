@@ -1,0 +1,158 @@
+@page "/admin/syllabus"
+@using CollegeWebSite.Components.Admin.Layout
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@layout AdminLayout
+@inject ISyllabusService SyllabusService
+@inject NavigationManager Navigation
+
+<PageTitle>Curriculum Management | Ishika CMS Admin</PageTitle>
+
+<div class="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+    <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 bg-amber-50 text-amber-600 text-[9px] font-black uppercase tracking-widest rounded-md border border-amber-100">
+            Academic Governance
+        </div>
+        <h1 class="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-none">Course <br/><span class="text-slate-400">Syllabus Hub.</span></h1>
+        <p class="text-slate-500 font-medium text-sm max-w-xl">Manage subject-wise curriculums and official study resources.</p>
+    </div>
+    
+    <button @onclick='() => Navigation.NavigateTo("/admin/syllabus/edit")' class="group/btn relative px-8 py-3 bg-slate-950 text-white font-black text-[10px] uppercase tracking-[0.2em] rounded-xl shadow-2xl hover:bg-amber-500 transition-all overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover/btn:animate-shimmer"></div>
+        <div class="relative flex items-center gap-2">
+            <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4" /></svg>
+            Create New Syllabus
+        </div>
+    </button>
+</div>
+
+<!-- Courses / Year Filter -->
+<div class="flex gap-3 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+    <button @onclick='() => FilterCourse("")' class="px-5 py-2.5 @(string.IsNullOrEmpty(SelectedFilter) ? "bg-slate-900 text-white" : "bg-white text-slate-500 border border-slate-100") rounded-xl font-black text-[9px] uppercase tracking-widest transition-all whitespace-nowrap shadow-sm">All Courses</button>
+    @foreach(var course in AvailableCourses)
+    {
+        <button @onclick='() => FilterCourse(course)' class="px-5 py-2.5 @(SelectedFilter == course ? "bg-slate-900 text-white" : "bg-white text-slate-500 border border-slate-100") rounded-xl font-black text-[9px] uppercase tracking-widest transition-all whitespace-nowrap shadow-sm">@course</button>
+    }
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    @if (IsLoading)
+    {
+        @for(int i=0; i<4; i++)
+        {
+            <div class="h-40 bg-slate-50 border border-slate-100 rounded-2xl animate-pulse"></div>
+        }
+    }
+    else if (FilteredSyllabuses.Any())
+    {
+        @foreach (var subject in FilteredSyllabuses)
+        {
+            <div class="group relative bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden">
+                <div class="flex flex-col gap-4 relative z-10 h-full justify-between">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-start">
+                            <div class="flex gap-2">
+                                <span class="px-2 py-0.5 bg-slate-900 text-white text-[8px] font-black uppercase tracking-widest rounded">@subject.CourseName</span>
+                                <span class="px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-100/50 text-[8px] font-black uppercase tracking-widest rounded">@subject.AcademicYear</span>
+                            </div>
+                            <div class="flex gap-1.5 lg:translate-x-1 lg:opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all">
+                                <button @onclick='() => Navigation.NavigateTo($"/admin/syllabus/edit/{subject.Id}")' class="h-8 w-8 rounded-lg bg-white text-slate-400 hover:text-amber-500 hover:shadow-md transition-all flex items-center justify-center border border-slate-100">
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                                </button>
+                                <button @onclick="() => HandleDelete(subject.Id)" class="h-8 w-8 rounded-lg bg-white text-slate-400 hover:text-red-500 hover:shadow-md transition-all flex items-center justify-center border border-slate-100"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
+                            </div>
+                        </div>
+                        <h3 class="text-base font-black text-slate-900 tracking-tight group-hover:text-amber-600 transition-colors line-clamp-1">@subject.Subject</h3>
+                        <p class="text-slate-500 font-medium text-xs leading-relaxed line-clamp-2">@subject.Description</p>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
+                        <div class="flex items-center gap-1.5">
+                            <div class="h-6 w-6 rounded-md bg-orange-50 flex items-center justify-center text-orange-500">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                            </div>
+                            <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Syllabus Linked</span>
+                        </div>
+                        <span class="text-[8px] font-black text-slate-300 uppercase">Order: @subject.DisplayOrder</span>
+                    </div>
+                </div>
+                
+                <!-- Background Accent -->
+                <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-amber-50 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="lg:col-span-2 py-32 text-center space-y-8 bg-slate-50/50 rounded-[4rem] border-4 border-dashed border-slate-100">
+            <div class="h-24 w-24 bg-white rounded-full flex items-center justify-center text-slate-200 mx-auto shadow-sm">
+                <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            </div>
+            <div class="space-y-2">
+                <h4 class="text-xl font-black text-slate-900">The library is closed.</h4>
+                <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">No curriculums have been registered for this filter.</p>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    @@keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    .animate-shimmer {
+        animation: shimmer 2s infinite;
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+
+@code {
+    private List<Syllabus> AllSyllabuses { get; set; } = new();
+    private List<Syllabus> FilteredSyllabuses { get; set; } = new();
+    private List<string> AvailableCourses { get; set; } = new();
+    private string SelectedFilter { get; set; } = "";
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSyllabuses();
+    }
+
+    private async Task LoadSyllabuses()
+    {
+        try 
+        {
+            await Task.Delay(500); // Aesthetic
+            AllSyllabuses = await SyllabusService.GetAllSyllabusesAsync();
+            AvailableCourses = await SyllabusService.GetAvailableCoursesAsync();
+            FilterCourse(SelectedFilter);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void FilterCourse(string course)
+    {
+        SelectedFilter = course;
+        if (string.IsNullOrEmpty(course))
+        {
+            FilteredSyllabuses = AllSyllabuses;
+        }
+        else
+        {
+            FilteredSyllabuses = AllSyllabuses.Where(s => s.CourseName == course).ToList();
+        }
+    }
+
+    private async Task HandleDelete(long id)
+    {
+        if (await SyllabusService.DeleteSyllabusAsync(id))
+        {
+            await LoadSyllabuses();
+        }
+    }
+}

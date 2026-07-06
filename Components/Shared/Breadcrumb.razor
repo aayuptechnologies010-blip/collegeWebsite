@@ -1,0 +1,45 @@
+@using CollegeWebSite.Services.Interfaces
+@inject ISeoService SeoService
+@inject NavigationManager NavigationManager
+
+@if (Items != null && Items.Any())
+{
+    <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="flex items-center gap-2 text-sm text-slate-600">
+            @foreach (var item in Items)
+            {
+                var isLast = item == Items.Last();
+                <li class="flex items-center gap-2">
+                    @if (!isLast)
+                    {
+                        <a href="@item.Url" class="hover:text-primary transition-colors font-medium">
+                            @item.Name
+                        </a>
+                        <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    }
+                    else
+                    {
+                        <span class="text-slate-900 font-bold" aria-current="page">@item.Name</span>
+                    }
+                </li>
+            }
+        </ol>
+    </nav>
+
+    <!-- Structured Data for SEO -->
+    <StructuredData JsonLd="@GetBreadcrumbSchema()" />
+}
+
+@code {
+    [Parameter] public List<BreadcrumbItem>? Items { get; set; }
+
+    private string GetBreadcrumbSchema()
+    {
+        if (Items == null || !Items.Any())
+            return string.Empty;
+
+        return SeoService.GenerateBreadcrumbSchema(Items);
+    }
+}

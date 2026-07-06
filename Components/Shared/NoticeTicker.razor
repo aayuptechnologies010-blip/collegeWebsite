@@ -1,0 +1,147 @@
+@using CollegeWebSite.Services.Interfaces
+@using CollegeWebSite.Domain.Entities
+@inject INoticeService NoticeService
+
+@if (Notices != null && Notices.Any())
+{
+    <div class="relative w-full bg-slate-950/90 backdrop-blur-xl border-b border-white/10 overflow-hidden z-[110] shadow-2xl group/ticker">
+        <!-- Professional Ambient Glows -->
+        <div class="absolute inset-0 opacity-20 pointer-events-none">
+            <div class="absolute top-0 left-1/4 w-96 h-full bg-blue-600/20 blur-[60px]"></div>
+            <div class="absolute top-0 right-1/4 w-96 h-full bg-red-600/10 blur-[60px]"></div>
+        </div>
+
+        <div class="container-custom relative flex items-center h-full">
+            <!-- Distinct Professional Label -->
+            <div class="absolute left-0 top-0 bottom-0 z-30 flex items-center pr-12 bg-gradient-to-r from-slate-950 via-slate-950 to-transparent">
+                <div class="flex items-center gap-3 px-6 py-2 bg-white/5 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-md group/label relative overflow-hidden transition-all duration-500 hover:border-primary/50 hover:bg-white/10">
+                    <!-- Shimmering Light Effect -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/label:animate-shimmer"></div>
+                    
+                    <div class="relative flex items-center justify-center">
+                        <span class="absolute inline-flex h-3 w-3 rounded-full bg-red-500 animate-ping opacity-20"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_12px_rgba(227,30,36,0.8)]"></span>
+                    </div>
+                    
+                    <span class="text-[12px] font-black uppercase tracking-[0.25em] text-white whitespace-nowrap">Latest Updates</span>
+                </div>
+            </div>
+
+            <!-- Enhanced Scrolling Ticker Container -->
+            <div class="flex-1 overflow-hidden ml-56">
+                <div class="flex gap-20 whitespace-nowrap animate-ticker-premium items-center h-full group-hover/ticker:[animation-play-state:paused]">
+                    @foreach (var notice in Notices)
+                    {
+                        <div class="flex items-center gap-8 group/item cursor-default py-1">
+                            <!-- News Content Interaction -->
+                            <div class="flex items-center gap-4 transition-all duration-500 group-hover/item:translate-x-2">
+                                @if (notice.IsUrgent)
+                                {
+                                    <span class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-red-600/10 border border-red-600/20 text-red-500 text-[10px] font-black uppercase tracking-widest animate-pulse shadow-[0_0_15px_rgba(227,30,36,0.1)]">
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                        Urgent
+                                    </span>
+                                }
+                                
+                                <span class="text-slate-100 text-[15px] font-bold tracking-tight group-hover/item:text-white transition-colors @(notice.IsUrgent ? "text-red-400/90 italic" : "")">
+                                    @notice.Title
+                                </span>
+                            </div>
+
+                            <!-- News Action Hook -->
+                            @if (!string.IsNullOrEmpty(notice.LinkUrl))
+                            {
+                                <a href="@notice.LinkUrl" class="group/btn relative flex items-center gap-2 px-4 py-1.5 bg-white/5 hover:bg-primary border border-white/10 rounded-xl transition-all duration-500 shadow-sm hover:shadow-primary/30">
+                                    <span class="text-[10px] font-black text-slate-300 group-hover/btn:text-white uppercase tracking-widest leading-none">Read Full Story</span>
+                                    <svg class="w-3.5 h-3.5 text-slate-500 group-hover/btn:text-white group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
+                                </a>
+                            }
+
+                            <!-- Professional Splitter -->
+                            <div class="flex items-center justify-center gap-2">
+                                <div class="w-1.5 h-1.5 rounded-full bg-slate-700 group-hover/item:bg-primary transition-colors shadow-sm"></div>
+                                <div class="w-1 h-1 rounded-full bg-slate-800"></div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Essential Loop Duplicate -->
+                    @foreach (var notice in Notices)
+                    {
+                        <div class="flex items-center gap-8 group/item cursor-default py-1">
+                            <div class="flex items-center gap-4 transition-all duration-500 group-hover/item:translate-x-2">
+                                @if (notice.IsUrgent)
+                                {
+                                    <span class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-red-600/10 border border-red-600/20 text-red-500 text-[10px] font-black uppercase tracking-widest animate-pulse shadow-[0_0_15px_rgba(227,30,36,0.1)]">
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                        Urgent
+                                    </span>
+                                }
+                                <span class="text-slate-100 text-[15px] font-bold tracking-tight group-hover/item:text-white transition-colors @(notice.IsUrgent ? "text-red-400/90 italic" : "")">
+                                    @notice.Title
+                                </span>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(notice.LinkUrl))
+                            {
+                                <a href="@notice.LinkUrl" class="group/btn relative flex items-center gap-2 px-4 py-1.5 bg-white/5 hover:bg-primary border border-white/10 rounded-xl transition-all duration-500 shadow-sm hover:shadow-primary/30">
+                                    <span class="text-[10px] font-black text-slate-300 group-hover/btn:text-white uppercase tracking-widest leading-none">Read Full Story</span>
+                                    <svg class="w-3.5 h-3.5 text-slate-500 group-hover/btn:text-white group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
+                                </a>
+                            }
+
+                            <div class="flex items-center justify-center gap-2">
+                                <div class="w-1.5 h-1.5 rounded-full bg-slate-700 shadow-sm"></div>
+                                <div class="w-1 h-1 rounded-full bg-slate-800"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Smooth Horizontal Masking -->
+            <div class="absolute right-0 top-0 bottom-0 z-20 w-48 bg-gradient-to-l from-slate-950 via-slate-950/50 to-transparent pointer-events-none"></div>
+            
+            <!-- Pause Feedback -->
+            <div class="absolute right-6 top-1/2 -translate-y-1/2 z-40 opacity-0 group-hover/ticker:opacity-100 transition-opacity duration-300 pointer-events-none">
+                <div class="flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-lg border border-white/10">
+                    <svg class="w-3 h-3 text-white fill-current" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>
+                    <span class="text-[9px] font-black text-white uppercase tracking-widest">Paused</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @@keyframes ticker-premium {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        @@keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .animate-ticker-premium {
+            animation: ticker-premium 55s linear infinite;
+        }
+
+        .animate-shimmer {
+            animation: shimmer 3s linear infinite;
+        }
+    </style>
+}
+
+@code {
+    private List<CampusNotice>? Notices { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Notices = await NoticeService.GetActiveNoticesAsync();
+    }
+}
