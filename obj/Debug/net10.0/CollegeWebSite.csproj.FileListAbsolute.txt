@@ -142,3 +142,4 @@ c:\Ayup technologies\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite-i
 c:\Ayup technologies\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite\obj\Debug\net10.0\CollegeWebSite.genruntimeconfig.cache
 c:\Ayup technologies\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite\obj\Debug\net10.0\ref\CollegeWebSite.dll
 C:\Ayup technologies\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.InMemory.dll
+C:\Ayup technologies\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite-ishikanursingcollege-master\CollegeWebSite\obj\Debug\net10.0\CollegeWebSite.sourcelink.json
